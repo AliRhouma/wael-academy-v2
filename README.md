@@ -12,8 +12,9 @@ Two areas, one app:
 | `/student-v2/seances` | Recordings by subject (all 17 subject portraits) |
 | `/student-v2/seances/:subjectId` | A subject's replays, by month |
 | `/student-v2/video/seance/:id` | Video player — playlist that expands / folds to a rail |
+| `/student-v2/offres` | Offers — the current offer and the others, side by side |
 
-Screens not designed yet (offres, matières, groupes…) show a placeholder in the same style.
+Screens not designed yet (matières, groupes…) show a placeholder in the same style.
 
 ## Run
 
@@ -33,7 +34,7 @@ No backend — all data is an in-memory store seeded from `src/data/seed/*.json`
   space. Flips every panel between its real, data-driven state and the others
   (live / soon / countdown / ended / postponed / none, empty lists, a crowded
   playlist…). Also settable by URL: `?live=soon`, `?docs=done`, `?calendar=empty`,
-  `?playlist=many`, `?comments=empty`, `?view=month`.
+  `?playlist=many`, `?comments=empty`, `?offers=none`, `?view=month`.
 - **S** — switches Wael's cursor-following eyes on/off (remembered). The dock's
   « عيون وائل » row does the same, and can override the OS reduced-motion setting.
 

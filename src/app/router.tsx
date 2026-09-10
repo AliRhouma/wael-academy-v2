@@ -10,6 +10,7 @@ import V2RecordingsScreen from "@/features/student-v2/recordings/RecordingsScree
 import V2SubjectRecordingsScreen from "@/features/student-v2/recordings/SubjectRecordingsScreen"
 import V2CalendarScreen from "@/features/student-v2/calendar/CalendarScreen"
 import V2VideoScreen from "@/features/student-v2/video/VideoScreen"
+import V2OffersScreen from "@/features/student-v2/offers/OffersScreen"
 
 function NotFound() {
   return (
@@ -49,7 +50,7 @@ export const router = createBrowserRouter([
       { path: "calendrier", element: <V2CalendarScreen /> },
       { path: "seances", element: <V2RecordingsScreen /> },
       { path: "seances/:subjectId", element: <V2SubjectRecordingsScreen /> },
-      { path: "offres", element: <V2Placeholder title="العروض" /> },
+      { path: "offres", element: <V2OffersScreen /> },
       { path: "groupes", element: <V2Placeholder title="مجموعاتي" note="صفحة جديدة — تستنّى التصميم متاعها." /> },
       { path: "matieres", element: <V2Placeholder title="موادك" /> },
       { path: "devoirs", element: <V2Placeholder title="التمارين" /> },

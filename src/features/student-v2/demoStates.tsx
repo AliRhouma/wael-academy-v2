@@ -29,6 +29,8 @@ export interface DemoStates {
   /** The player page: a long programme in the list, and an empty comment wall. */
   playlist: "auto" | "many"
   comments: FillMode
+  /** The offers page: the élève's real subscription, or none at all. */
+  offers: "auto" | "none"
   /** When `live` last changed — a made-up countdown ticks from here. */
   anchor: number
 }
@@ -43,6 +45,7 @@ const INITIAL: DemoStates = {
   notifs: "auto",
   playlist: "auto",
   comments: "auto",
+  offers: "auto",
   anchor: 0,
 }
 
@@ -139,6 +142,14 @@ const ROWS: { key: Key; label: string; options: { value: string; label: string }
     options: [
       { value: "auto", label: "حقيقي" },
       { value: "many", label: "برشا" },
+    ],
+  },
+  {
+    key: "offers",
+    label: "العروض",
+    options: [
+      { value: "auto", label: "حقيقي" },
+      { value: "none", label: "بلا اشتراك" },
     ],
   },
   {

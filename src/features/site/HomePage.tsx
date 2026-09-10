@@ -495,17 +495,18 @@ function Pricing() {
                   <span className="text-[calc(12px*var(--ts))] font-bold text-v2-ink md:text-[calc(15px*var(--ts))]" dir="auto">
                     {o.name}
                   </span>
-                  <span className="ms-auto flex items-baseline gap-1 text-v2-ink" dir="ltr">
-                    <span className={cn("font-black tabular-nums", on ? "text-[calc(26px*var(--ts))]" : "text-[calc(20px*var(--ts))]")}>{o.price}</span>
+                  <span className="ms-auto flex items-baseline gap-1.5 text-v2-ink" dir="ltr">
+                    {o.promoPrice && <span className="text-[calc(9px*var(--ts))] tabular-nums text-v2-live line-through decoration-2">{o.price}</span>}
+                    <span className={cn("font-black tabular-nums", on ? "text-[calc(26px*var(--ts))]" : "text-[calc(20px*var(--ts))]")}>{o.promoPrice ?? o.price}</span>
                     <span className="text-[calc(8px*var(--ts))]">Dt</span>
                   </span>
                 </div>
                 {on && (
                   <div className="mt-3 animate-in fade-in-0 slide-in-from-top-1 duration-300 ps-8">
-                    <p className="text-[calc(9px*var(--ts))] text-v2-ink/70">{o.period}</p>
+                    <p className="text-[calc(9px*var(--ts))] text-v2-ink/70">{o.audience ?? o.period}</p>
                     <p className="mt-2 text-[calc(9.5px*var(--ts))] leading-relaxed text-v2-ink/80">{o.description}</p>
                     <ul className="mt-3 grid gap-1.5 sm:grid-cols-2">
-                      {(o.features ?? []).map((f) => (
+                      {(o.features ?? []).slice(0, 8).map((f) => (
                         <li key={f} className="flex items-start gap-2 text-[calc(9px*var(--ts))] text-v2-ink">
                           <Check className="mt-1 size-4 shrink-0 text-v2-brand" strokeWidth={2.5} />
                           {f}
