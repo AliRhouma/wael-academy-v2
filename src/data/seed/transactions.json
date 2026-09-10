@@ -1,0 +1,33 @@
+[
+  {
+    "id": "tx-mo-1",
+    "subscriptionId": "sub-mohamed-bacmath",
+    "date": "2026-06-21",
+    "amount": 1000,
+    "remarks": "القسط الأوّل تخلّص وقت التسجيل، كاش.",
+    "installmentId": "inst-mo-1",
+    "resources": [
+      { "name": "وصل عدد 2031", "notes": "تخلّص في الاستقبال" }
+    ]
+  },
+  {
+    "id": "tx-in-1",
+    "subscriptionId": "sub-ines-bacmath",
+    "date": "2026-07-01",
+    "amount": 2300,
+    "remarks": "خلّصت الكل بتحويل بنكي.",
+    "installmentId": "inst-in-1",
+    "resources": [
+      { "name": "إثبات التحويل", "url": "https://example.tn/virement-4471.pdf", "notes": "مرجع 4471" }
+    ]
+  },
+  {
+    "id": "tx-em-1",
+    "subscriptionId": "sub-emna-bacsci",
+    "date": "2026-07-05",
+    "amount": 400,
+    "remarks": "تسبقة جزئية على القسط الأوّل — باقي 450 د.",
+    "installmentId": "inst-em-1",
+    "resources": []
+  }
+]

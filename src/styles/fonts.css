@@ -1,0 +1,12 @@
+/* ===========================================================================
+   Type — Cairo, display and interface alike
+   ---------------------------------------------------------------------------
+   The app reads its type from two live slots, `--ui-display` (headings, big
+   numbers) and `--ui-sans` (everything else); index.css points `font-family`,
+   `h1–h6`, `.font-display` and `.font-sans` at them. Cairo is variable
+   200–1000 over Arabic + Latin, loaded once in index.html.
+   =========================================================================== */
+:root {
+  --ui-display: "Cairo", system-ui, sans-serif;
+  --ui-sans: "Cairo", system-ui, sans-serif;
+}

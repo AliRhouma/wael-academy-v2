@@ -1,0 +1,67 @@
+[
+  {
+    "id": "msg-mo-1",
+    "studentUserId": "u-student",
+    "senderUserId": "u-student",
+    "text": "أهلا، ما نجّمش نحلّ فيديو درس «الأعداد المركّبة». يقعد يشارجي وما يحلّش.",
+    "at": "2026-07-20T18:05:00.000Z",
+    "readByAdmin": true,
+    "readByStudent": true
+  },
+  {
+    "id": "msg-mo-2",
+    "studentUserId": "u-student",
+    "senderUserId": "u-admin",
+    "text": "أهلا محمد! يعيشك على التنبيه، توّا نشوفو فيها.",
+    "at": "2026-07-20T18:22:00.000Z",
+    "readByAdmin": true,
+    "readByStudent": true
+  },
+  {
+    "id": "msg-mo-3",
+    "studentUserId": "u-student",
+    "senderUserId": "u-admin-2",
+    "text": "تصلّح ✅ عاود جرّب وقلّنا إذا مشات.",
+    "at": "2026-07-21T09:40:00.000Z",
+    "readByAdmin": true,
+    "readByStudent": false
+  },
+
+  {
+    "id": "msg-in-1",
+    "studentUserId": "u-student-ines",
+    "senderUserId": "u-student-ines",
+    "text": "أهلا، الحصص المسجّلة متاع فوج النخبة داخلين في الاشتراك متاعي ولاّ لا؟",
+    "at": "2026-07-22T10:15:00.000Z",
+    "readByAdmin": false,
+    "readByStudent": true
+  },
+
+  {
+    "id": "msg-em-1",
+    "studentUserId": "u-st-emna",
+    "senderUserId": "u-st-emna",
+    "text": "مساء الخير، الدخول متاعي مسكّر وأنا خلّصت تسبقة الجمعة اللي فاتت…",
+    "at": "2026-07-18T20:02:00.000Z",
+    "readByAdmin": true,
+    "readByStudent": true
+  },
+  {
+    "id": "msg-em-2",
+    "studentUserId": "u-st-emna",
+    "senderUserId": "u-admin",
+    "text": "مساء النور آمنة، التسبقة متاع 40 دينار مسجّلة — باقي 50 دينار على القسط الأوّل باش يتفكّ الدخول. تنجّم تعدّي للاستقبال وقت ما تحبّ.",
+    "at": "2026-07-19T08:55:00.000Z",
+    "readByAdmin": true,
+    "readByStudent": true
+  },
+  {
+    "id": "msg-em-3",
+    "studentUserId": "u-st-emna",
+    "senderUserId": "u-st-emna",
+    "text": "بهي، باش نعدّي نهار الخميس. يعيشكم!",
+    "at": "2026-07-19T12:30:00.000Z",
+    "readByAdmin": false,
+    "readByStudent": true
+  }
+]

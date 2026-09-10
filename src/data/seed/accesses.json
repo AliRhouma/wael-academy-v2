@@ -1,0 +1,50 @@
+[
+  {
+    "id": "acc-bac-math-complet",
+    "name": "المحتوى الكامل — باك رياضيات",
+    "description": "الدروس والسلاسل والكويزات والمسارات الكل متاع قسم باك رياضيات.",
+    "types": ["cours", "exercice", "serie", "resume", "quiz", "quizExam", "path"],
+    "yearIds": ["y-bac-math"],
+    "subjectIds": [],
+    "chapterIds": [],
+    "academicYears": [],
+    "groupIds": [],
+    "excludedIds": []
+  },
+  {
+    "id": "acc-bacmath-seances",
+    "name": "الحصص المسجّلة — النخبة",
+    "description": "تسجيلات حصص فوج Bac Maths — Élite، السنة الدراسية 2026/2027.",
+    "types": ["recordedSession"],
+    "yearIds": [],
+    "subjectIds": [],
+    "chapterIds": [],
+    "academicYears": ["2026/2027"],
+    "groupIds": ["g-bacmath-elite"],
+    "excludedIds": []
+  },
+  {
+    "id": "acc-bac-sci-revision",
+    "name": "مراجعة — باك علوم",
+    "description": "دروس وسلاسل وكويزات المواد العلمية للمراجعة المركّزة.",
+    "types": ["cours", "serie", "quiz"],
+    "yearIds": ["y-bac-sci"],
+    "subjectIds": ["subj-bac-sci-mathematiques", "subj-bac-sci-sciences-physiques"],
+    "chapterIds": [],
+    "academicYears": [],
+    "groupIds": [],
+    "excludedIds": []
+  },
+  {
+    "id": "acc-9-decouverte",
+    "name": "اكتشاف — تاسعة",
+    "description": "دروس وكويزات الرياضيات متاع أوّل الفصول، باش تذوق المنصّة.",
+    "types": ["cours", "quiz"],
+    "yearIds": ["y-9"],
+    "subjectIds": ["subj-9-mathematiques"],
+    "chapterIds": [],
+    "academicYears": [],
+    "groupIds": [],
+    "excludedIds": []
+  }
+]

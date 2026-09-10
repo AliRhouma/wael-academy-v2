@@ -1,0 +1,36 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Designer reference material — kept on disk, never imported by the app.
+# (The art the build DOES import lives in "svg icons/illustrations/".)
+pl.html
+svg icons/Wael Academy.html
+svg icons/Wael Academy_files/
+svg icons/38.svg
+svg icons/43.svg
+svg icons/wael running.svg
+svg icons/wael-face.svg
+svg icons/wael-running-crop.svg
+src/components/icons/subjects/art/

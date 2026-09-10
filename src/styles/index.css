@@ -1,0 +1,991 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "./palettes.css"; /* alternate palettes — swappable via data-palette on <html> */
+@import "./fonts.css"; /* alternate typefaces — swappable via data-font on <html> */
+@import "./v2.css"; /* the new élève space (/student-v2) — its own fixed palette */
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ===========================================================================
+   Wael Academy — Planning Design Tokens
+   ---------------------------------------------------------------------------
+   THIS FILE is the single source of truth for design tokens. Tailwind v4
+   `@theme inline` (below) binds every utility to a variable, so a correctly
+   tokened component themes for light/dark automatically.
+
+   The look: a warm, soft education dashboard on the Wael Academy brand —
+   green → teal → navy gradient, gold + red accents, cream warmth, Cairo
+   throughout, low-contrast green-tinted elevation.
+
+   Light is the primary theme. Dark tokens are defined via `[data-theme="dark"]`.
+   Toggle by setting `data-theme="dark"` on <html>.
+   =========================================================================== */
+
+/* ---------- Fonts ---------- */
+/* Load once, at the app root:
+   Cairo is the default, display and interface alike — variable 200–1000 over
+   Arabic + Latin. The live slots are --ui-display / --ui-sans (fonts.css), which
+   the FontDock re-points at runtime. */
+
+/* ===========================================================================
+   :root  —  Light theme tokens
+   =========================================================================== */
+:root {
+  /* ---- Base ---- */
+  /* --ui-display / --ui-sans are the LIVE type slots (see fonts.css); the
+     default pair is set there on :root so a [data-font] block can replace it. */
+  font-family: var(--ui-sans);
+  font-weight: 400;
+  /* Arabic sits taller than Latin (ascenders + descenders on nearly every word),
+     so the base leading is a touch looser than the Latin original (1.5). */
+  line-height: 1.6;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color-scheme: light;
+
+  /* ---- Brand: teal (mid) → the primary spine ----------------------------- */
+  /* The brand is the green→teal→navy gradient; `brand` is its readable mid-teal,
+     used for solid fills, links, active nav. Ramp derived around #0f8079.       */
+  --brand-50: #e7f3ef;
+  --brand-100: #cbe9dc;
+  --brand-200: #a6d9c6;
+  --brand-300: #6fc0a6;
+  --brand-400: #33a084;
+  --brand-500: #0f8079; /* the mid teal — primary action */
+  --brand-600: #0c6f6a;
+  --brand-700: #0a5a58;
+  --brand-800: #094745;
+  --brand-900: #073635;
+  --brand-foreground: #ffffff;
+
+  /* ---- Emerald (top of the gradient) — a supporting brand green ---------- */
+  --emerald-50: #e9f7ef;
+  --emerald-500: #1a9e6e;
+  --emerald-600: #128a5f;
+  --emerald-700: #0e6b4e;
+
+  /* ---- Navy (bottom of the gradient) — headings ink + deep chips --------- */
+  --navy-50: #eaf1f8;
+  --navy-500: #173f6d;
+  --navy-600: #123258;
+  --navy-700: #0e2745;
+
+  /* ---- Accent: gold (the wax seal, kickers, favorites) ------------------- */
+  --accent-50: #fdf3dd;
+  --accent-100: #fbeecb; /* cream */
+  --accent-500: #c98a00; /* gold */
+  --accent-600: #a87400;
+  --accent-700: #8a6000;
+  --accent-foreground: #ffffff;
+
+  /* ---- Neutrals (green-tinted warm greys) ------------------------------- */
+  --neutral-50: #f5f7f5;
+  --neutral-100: #eef2ee;
+  --neutral-200: #e8eeea;
+  --neutral-300: #d9e3dd;
+  --neutral-400: #b6c0ba;
+  --neutral-500: #949a98;
+  --neutral-600: #5b6360;
+  --neutral-700: #3c433f;
+  --neutral-800: #23302b;
+  --neutral-900: #101012;
+
+  /* ---- Surfaces & Ink (use these for layout, not raw neutrals) ---------- */
+  --surface: #ffffff;          /* cards, popovers, inputs */
+  --surface-subtle: #f4f7f8;   /* the page background (cool, light near-white) */
+  --surface-muted: #f7faf8;    /* table headers, side panel, control tracks */
+  --surface-raised: #ffffff;   /* dialogs, dropdowns, sheets */
+  --surface-cream: #fdf7e9;    /* warm callouts, the promo card */
+
+  /* How much of an artwork's measured tint a card keeps (see subjectTint.ts).
+     Full strength on light; dark re-mixes it into the dark surface below.
+     `-fill` is the hover flood — deeper, so the change is felt. */
+  --tint-strength: 100%;
+  --tint-fill-strength: 100%;
+  /* The concentric rings behind a matière's drawing (see subjectTint.ts). */
+  --tint-ring-strength: 100%;
+
+  --ink: #101012;        /* primary text */
+  --ink-subtle: #5b6360; /* secondary text */
+  --ink-muted: #949a98;  /* tertiary / placeholders / labels */
+  --ink-inverted: #ffffff;
+
+  /* ---- Borders, Rings, Inputs ------------------------------------------- */
+  --border: #e8eeea;
+  --border-strong: #d9e3dd;
+  --input: #f7faf8;      /* input background */
+  --input-border: #e8eeea;
+  --ring: #0f8079;       /* focus ring (brand-500) */
+
+  /* ---- Status ----------------------------------------------------------- */
+  --success-50: #e9f7ef;
+  --success-500: #1a9e6e;
+  --success-600: #128a5f;
+  --success-700: #0e6b4e;
+  --success-foreground: #ffffff;
+
+  --warning-50: #fdf3dd;
+  --warning-500: #c98a00;
+  --warning-600: #a87400;
+  --warning-700: #8a6000;
+  --warning-foreground: #ffffff;
+
+  --danger-50: #fdeceb;
+  --danger-500: #de0000; /* the "today" red / destructive */
+  --danger-600: #c40000;
+  --danger-700: #a8201d;
+  --danger-foreground: #ffffff;
+
+  --info-50: #eaf1f8;
+  --info-500: #173f6d; /* navy — informational, distinct from brand teal */
+  --info-600: #123258;
+  --info-700: #0e2745;
+  --info-foreground: #ffffff;
+
+  /* ---- Brand gradient (the DNA — nav-active, CTA, avatar, seal, promo) --- */
+  --grad: linear-gradient(148deg, #23ac76 0%, #149a76 24%, #0e7d7a 47%, #155f74 68%, #183f6b 100%);
+  /* The veil that turns that ramp into a GROUND (see `.bg-grad-wash`): the page
+     surface at 78 %, so a bit over a fifth of the brand gradient comes through
+     — enough that the ramp reads as a colour with a direction to it, not as a
+     grey page someone breathed on. It is the surface itself and not white, so
+     the wash inherits whatever the page is made of — and every palette's own
+     `--grad` rides underneath untouched. THIS NUMBER IS THE ONLY KNOB: lower it
+     and the brand comes forward, raise it and the page goes quiet. */
+  --grad-veil: color-mix(in srgb, var(--surface) 78%, transparent);
+
+  /* ---- shadcn semantic aliases (mapped to tokens above) ----------------- */
+  --background: var(--surface-subtle);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--brand-500);
+  --primary-foreground: var(--brand-foreground);
+  --secondary: var(--surface-muted);
+  --secondary-foreground: var(--ink);
+  --muted: var(--neutral-100);
+  --muted-foreground: var(--ink-muted);
+  --accent-bg: var(--neutral-100);
+  --accent-bg-foreground: var(--ink);
+  --destructive: var(--danger-500);
+  --destructive-foreground: var(--danger-foreground);
+
+  /* ---- Radii — soft and generous --------------------------------------- */
+  --radius-xs: 0.375rem;  /* 6  */
+  --radius-sm: 0.625rem;  /* 10 — chips */
+  --radius-md: 0.875rem;  /* 14 — buttons, inputs, icon chips */
+  --radius: 0.875rem;
+  --radius-lg: 1.25rem;   /* 20 — cards */
+  --radius-xl: 1.75rem;   /* 28 — window shell, hero cards */
+  --radius-2xl: 1.75rem;
+
+  /* ---- Shadows — soft, GREEN-TINTED (never black) ----------------------- */
+  --shadow-xs: 0 1px 2px 0 rgb(21 58 45 / 0.04);
+  --shadow-sm: 0 2px 5px rgb(21 58 45 / 0.05);
+  --shadow-md: 0 8px 16px -8px rgb(21 58 45 / 0.14),
+    0 2px 6px rgb(21 58 45 / 0.04);
+  --shadow-lg: 0 12px 28px -10px rgb(21 58 45 / 0.16),
+    0 2px 6px rgb(21 58 45 / 0.04);
+  --shadow-xl: 0 40px 80px -30px rgb(21 58 45 / 0.34),
+    0 10px 28px -14px rgb(24 63 107 / 0.12);
+  --shadow-focus: 0 0 0 4px rgb(35 172 118 / 0.1);
+  /* The panel elevation, as a `filter` rather than a `box-shadow` — the cream
+     panels are CLIPPED (the notch, the speech tail) and clipping happens after
+     the box-shadow is painted, so a shadow on them is cut away with the corner
+     it was meant to sit under. A drop-shadow on a wrapper OUTSIDE the clip
+     follows the cut shape instead, notch and tail included. Two layers: a wide
+     soft one for the lift, a tight one to seat the edge on the canvas. */
+  --shadow-panel:
+    drop-shadow(0 10px 18px rgb(21 58 45 / 0.10)) drop-shadow(0 2px 4px rgb(21 58 45 / 0.05));
+  --shadow-brand: 0 12px 22px -10px rgb(14 125 122 / 0.85); /* glow under gradient fills */
+}
+
+/* ===========================================================================
+   Tailwind v4 @theme bridge — registers tokens as utility classes.
+   =========================================================================== */
+@theme inline {
+  /* ---- Brand scale ---- */
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-800: var(--brand-800);
+  --color-brand-900: var(--brand-900);
+  --color-brand: var(--brand-500);
+  --color-brand-foreground: var(--brand-foreground);
+
+  /* ---- Emerald / Navy supporting greens ---- */
+  --color-emerald-50: var(--emerald-50);
+  --color-emerald-500: var(--emerald-500);
+  --color-emerald-600: var(--emerald-600);
+  --color-emerald-700: var(--emerald-700);
+  --color-navy-50: var(--navy-50);
+  --color-navy-500: var(--navy-500);
+  --color-navy-600: var(--navy-600);
+  --color-navy-700: var(--navy-700);
+
+  /* ---- Accent (gold) ---- */
+  --color-accent2-50: var(--accent-50);
+  --color-accent2-100: var(--accent-100);
+  --color-accent2-500: var(--accent-500);
+  --color-accent2-600: var(--accent-600);
+  --color-accent2-700: var(--accent-700);
+  --color-accent2: var(--accent-500);
+  --color-accent2-foreground: var(--accent-foreground);
+
+  /* ---- Neutral scale ---- */
+  --color-neutral-50: var(--neutral-50);
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-400: var(--neutral-400);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-600: var(--neutral-600);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-800: var(--neutral-800);
+  --color-neutral-900: var(--neutral-900);
+
+  /* ---- Status ---- */
+  --color-success-50: var(--success-50);
+  --color-success-500: var(--success-500);
+  --color-success-600: var(--success-600);
+  --color-success-700: var(--success-700);
+  --color-success: var(--success-500);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning-50: var(--warning-50);
+  --color-warning-500: var(--warning-500);
+  --color-warning-600: var(--warning-600);
+  --color-warning-700: var(--warning-700);
+  --color-warning: var(--warning-500);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-danger-50: var(--danger-50);
+  --color-danger-500: var(--danger-500);
+  --color-danger-600: var(--danger-600);
+  --color-danger-700: var(--danger-700);
+  --color-danger: var(--danger-500);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-info-50: var(--info-50);
+  --color-info-500: var(--info-500);
+  --color-info-600: var(--info-600);
+  --color-info-700: var(--info-700);
+  --color-info: var(--info-500);
+  --color-info-foreground: var(--info-foreground);
+
+  /* ---- Surfaces & ink ---- */
+  --color-surface: var(--surface);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-cream: var(--surface-cream);
+  --color-ink: var(--ink);
+  --color-ink-subtle: var(--ink-subtle);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-inverted: var(--ink-inverted);
+
+  /* ---- shadcn semantic aliases ---- */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent-bg);
+  --color-accent-foreground: var(--accent-bg-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input-border);
+  --color-input-bg: var(--input);
+  --color-ring: var(--ring);
+
+  /* ---- Radii ---- */
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+
+  /* ---- Shadows ---- */
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+
+  /* ---- Fonts ---- */
+  /* One family for both roles: Playpen Sans Arabic covers Arabic AND Latin, so
+     the wordmark and the Arabic copy share a single hand — no fallback seam. */
+  --font-display: var(--ui-display);
+  --font-sans: var(--ui-sans);
+}
+
+/* ===========================================================================
+   TYPE SCALE — one knob for the size of every word in the app
+   ---------------------------------------------------------------------------
+   `--ts` multiplies EVERY font size. Set it here and nothing else has to move:
+     1     the sizes as originally drawn
+     1.25  a comfortable bump
+     2     double
+
+   It works on both halves of the type in this codebase:
+
+   • the NAMED sizes (`text-sm`, `text-base`, …). Tailwind v4 emits
+     `.text-sm { font-size: var(--text-sm) }`, so redefining those seven
+     variables re-sizes every use at once. Their line-heights are unitless
+     RATIOS (`calc(1.25 / .875)`), so they follow on their own — leading stays
+     proportional at any scale.
+
+   • the ARBITRARY ones (`text-[13px]`, of which this app has ~500). Those bake
+     the number into the class name and can't be reached from here, so each one
+     carries the multiplier itself: `text-[calc(13px*var(--ts))]`.
+
+   A WORD OF WARNING at 2: box heights, icon sizes and padding do NOT scale with
+   this — they're spacing utilities, not type. Buttons, chips and table rows were
+   drawn around the original sizes, so doubled text crowds them and some labels
+   will wrap. That's inherent to scaling type alone; if it's too tight, this
+   number is the only thing to change.
+   =========================================================================== */
+:root {
+  /* 2 → 1 → 1.5. Half again over the sizes the screens were drawn at: clearly
+     bigger type, and short of the 2 that pushed labels out of their chips. */
+  --ts: 1.5;
+
+  --text-xs: calc(0.75rem * var(--ts));
+  --text-sm: calc(0.875rem * var(--ts));
+  --text-base: calc(1rem * var(--ts));
+  --text-lg: calc(1.125rem * var(--ts));
+  --text-xl: calc(1.25rem * var(--ts));
+  --text-2xl: calc(1.5rem * var(--ts));
+  --text-3xl: calc(1.875rem * var(--ts));
+}
+
+/* ===========================================================================
+   Base layer
+   =========================================================================== */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+    max-width: 100%;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-weight: 400;
+  }
+  /* Headings run 700 of the same family — Playpen is variable, so it's real. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--ui-display);
+    font-weight: 700;
+    color: var(--ink);
+  }
+  ::selection {
+    background: var(--brand-100);
+    color: var(--ink);
+  }
+}
+
+/* ===========================================================================
+   Component / Utility helpers
+   =========================================================================== */
+@layer components {
+  .container {
+    @apply w-full;
+    max-width: 1220px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--ui-display);
+  }
+  .font-sans {
+    font-family: var(--ui-sans);
+  }
+  /* The brand fill — nav-active, CTA, avatar, brand plate, search button.
+     FLAT, deliberately. It used to paint `--grad`, the palette's five-stop
+     gradient; every one of those surfaces is now one solid `--brand-500`. The
+     name is kept because 120-odd call sites read it and the choice is one line
+     to reverse — swap the value back to `var(--grad)`.
+     `--grad` itself is untouched and still holds each palette's gradient, for
+     the places that genuinely want a ramp rather than a fill (the landing
+     headline paints text with it). */
+  .bg-grad {
+    background: var(--brand-500);
+  }
+  /* THE BRAND GRADIENT AS A GROUND — the same ramp the logo plate wears, laid
+     under a near-opaque veil of the page's own surface so a whole panel can
+     carry the brand's colour without competing with the cards on it. One
+     background, no pseudo-element: the veil is a solid-colour gradient layer
+     stacked ON TOP of `--grad`, which is how you dim a background image in
+     place. Palette-aware for free — swap the palette and the wash follows.
+     Dark is left to the caller: on a dark page a tinted plate reads lighter
+     than the cards laid on it, and the surfaces that use this drop the fill and
+     keep the frame instead (see StudentSubjectDetailScreen). */
+  .bg-grad-wash {
+    background-color: var(--surface);
+    background-image:
+      linear-gradient(var(--grad-veil), var(--grad-veil)),
+      var(--grad);
+  }
+  /* The signature "warm canvas" — page background with cream + green glows. */
+  .bg-canvas {
+    background-color: var(--surface-subtle);
+    background-image:
+      radial-gradient(760px 420px at 88% -6%, rgb(96 165 250 / 0.12), transparent 62%),
+      radial-gradient(680px 480px at -6% 106%, rgb(129 140 248 / 0.11), transparent 60%),
+      radial-gradient(500px 380px at 108% 92%, rgb(45 178 164 / 0.10), transparent 62%);
+  }
+  .shadow-brand {
+    box-shadow: var(--shadow-brand);
+  }
+
+  /* « bump » — the CARD's physics, on a button.
+     Every panel on the dashboard is a plate sitting on a 3px edge, and these
+     buttons are cut from the same material: each one stands on a solid slab of
+     its own darker side, rises a hair when the cursor reaches it, and DROPS
+     onto that slab when pressed — the edge vanishes under the button exactly
+     the way a card pushed flat against the page would. That is the whole idea:
+     the press is the slab being spent, not a colour change.
+
+     Nothing here touches layout. The slab is a zero-blur `box-shadow`, so a
+     button gains the effect without moving a single neighbour — it only needs a
+     few px of breathing room under it, which every call site already has.
+
+     Two knobs, both settable per call site:
+       --bump       how tall the slab is (and so how far the press travels)
+       --bump-edge  its colour — the button's OWN darker side, mixed in oklab so
+                    it stays the same hue under every palette AND in dark mode
+                    (a fixed `--brand-700` would have gone lighter there).
+     Timing is a slight overshoot on the way up (the card settling) and a short,
+     flat 70ms on the way down — a press has to feel instant or it reads as lag.
+     The transition PROPERTIES come from Tailwind's own `transition` utility on
+     the call sites; only the curve is set here, so nothing is fighting.
+     Hover is gated on a real pointer: on a touchscreen `:hover` sticks after a
+     tap and the button would stay lifted with its slab out. */
+  /* « rise » — the system's entry move: surfaces fade up ~10px, staggered.
+     The stagger is a custom property rather than seven classes, so a caller
+     sets `--i` on each panel and they deal onto the canvas in order.
+     `backwards` matters: without it a panel is fully painted during its own
+     delay and only then jumps to opacity 0 — the flash the fill mode exists to
+     prevent. The whole rule lives inside the motion query, so under reduced
+     motion the panels are simply there. */
+  @media (prefers-reduced-motion: no-preference) {
+    .rise {
+      animation: wael-panel-rise 460ms cubic-bezier(0.22, 0.9, 0.3, 1) backwards;
+      animation-delay: calc(var(--i, 0) * 70ms);
+    }
+  }
+
+  .btn-bump {
+    --bump: 4px;
+    --bump-edge: color-mix(in oklab, var(--brand-500) 72%, black);
+    box-shadow:
+      0 var(--bump) 0 0 var(--bump-edge),
+      0 calc(var(--bump) + 5px) 12px -6px rgb(21 58 45 / 0.4);
+    transition-timing-function: cubic-bezier(0.34, 1.5, 0.64, 1);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    @media (hover: hover) {
+      .btn-bump:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          0 calc(var(--bump) + 2px) 0 0 var(--bump-edge),
+          0 calc(var(--bump) + 9px) 16px -7px rgb(21 58 45 / 0.45);
+      }
+    }
+    .btn-bump:active {
+      transform: translateY(var(--bump));
+      box-shadow: 0 0 0 0 var(--bump-edge);
+      transition-duration: 70ms;
+    }
+  }
+}
+
+/* ===========================================================================
+   Dark theme — deep pine, warm neutrals, brighter greens for readable text
+   ---------------------------------------------------------------------------
+   Elevation (soft, green-undertoned):
+     L0 page     #0d1613  --surface-subtle / --background
+     L1 muted    #111d19  --surface-muted  / side panel, table headers
+     L3 card     #14201c  --surface / --card / cards, popovers
+     L4 raised   #1b2925  --surface-raised / dropdowns, menus
+   Border: warm ink at ~8% opacity. Ring: brand teal.
+   =========================================================================== */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Primary fill stays readable-teal; higher tokens brighten so text-brand-*
+     stays legible on dark surfaces. */
+  --brand-50: #0c2f2c;
+  --brand-100: #0e3d39;
+  --brand-200: #12514c;
+  --brand-300: #17706a;
+  --brand-400: #2f9b90;
+  --brand-500: #2bb3a4; /* brighter primary for dark bg */
+  --brand-600: #5bc9bd;
+  --brand-700: #8ddcd3;
+  --brand-800: #b6e9e3;
+  --brand-900: #daf4f1;
+  --brand-foreground: #06201d;
+
+  --emerald-50: #0e3d2a;
+  --emerald-500: #3bc088;
+  --emerald-600: #63d3a2;
+  --emerald-700: #8fe0bd;
+
+  --navy-50: #12233a;
+  --navy-500: #7ba7d8;
+  --navy-600: #a3c3e6;
+  --navy-700: #c7dbf0;
+
+  --accent-50: #3a2c08;
+  --accent-100: #4d3a0a;
+  --accent-500: #e6a41f;
+  --accent-600: #f2bd4d;
+  --accent-700: #f8d27e;
+  --accent-foreground: #1c1508;
+
+  --neutral-50: #14201c;
+  --neutral-100: #18251f;
+  --neutral-200: #22302a;
+  --neutral-300: #2e3d36;
+  --neutral-400: #6a746f;
+  --neutral-500: #97a19b;
+  --neutral-600: #b7bfba;
+  --neutral-700: #d3d9d5;
+  --neutral-800: #e8ebe9;
+  --neutral-900: #f4f6f4;
+
+  --surface: #14201c;
+  --surface-subtle: #0d1613;
+  --surface-muted: #111d19;
+  --surface-raised: #1b2925;
+  --surface-cream: #2a2412;
+
+  /* A light tint at full strength would blow a hole in a dark page — keep the
+     hue, let the dark surface carry the value. The hover flood gets more of it,
+     so the card still visibly lifts under the pointer. */
+  --tint-strength: 16%;
+  --tint-fill-strength: 30%;
+  /* The rings are a light wash ON a dark card, so they read as glow rather than
+     tint — half strength is enough to feel them without lighting the grid up. */
+  --tint-ring-strength: 45%;
+
+  --ink: #f0f3f1;
+  --ink-subtle: #b7bfba;
+  --ink-muted: #8a938e;
+  --ink-inverted: #06201d;
+
+  --border: rgb(255 255 255 / 0.08);
+  --border-strong: rgb(255 255 255 / 0.14);
+  --input: #18251f;
+  --input-border: rgb(255 255 255 / 0.10);
+  --ring: #2bb3a4;
+
+  --success-50: #0e3d2a;
+  --success-500: #3bc088;
+  --success-600: #63d3a2;
+  --success-700: #8fe0bd;
+  --warning-50: #3a2c08;
+  --warning-500: #e6a41f;
+  --warning-600: #f2bd4d;
+  --warning-700: #f8d27e;
+  --danger-50: #3d1210;
+  --danger-500: #ff5a52;
+  --danger-600: #ff7d76;
+  --danger-700: #ffa39e;
+  --info-50: #12233a;
+  --info-500: #7ba7d8;
+  --info-600: #a3c3e6;
+  --info-700: #c7dbf0;
+
+  /* The gradient DNA holds in dark — it's a brand asset, not a neutral. */
+  --grad: linear-gradient(148deg, #23ac76 0%, #149a76 24%, #0e7d7a 47%, #155f74 68%, #183f6b 100%);
+
+  --background: var(--surface-subtle);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface-raised);
+  --popover-foreground: var(--ink);
+  --primary: var(--brand-500);
+  --primary-foreground: var(--brand-foreground);
+  --secondary: var(--surface-muted);
+  --secondary-foreground: var(--ink);
+  --muted: var(--neutral-100);
+  --muted-foreground: var(--ink-muted);
+  --accent-bg: var(--neutral-200);
+  --accent-bg-foreground: var(--ink);
+  --destructive: var(--danger-500);
+  --destructive-foreground: #06201d;
+
+  /* Shadows deepen on dark. */
+  --shadow-sm: 0 2px 5px rgb(0 0 0 / 0.30);
+  --shadow-md: 0 8px 16px -8px rgb(0 0 0 / 0.45), 0 2px 6px rgb(0 0 0 / 0.25);
+  --shadow-panel:
+    drop-shadow(0 10px 20px rgb(0 0 0 / 0.45)) drop-shadow(0 2px 4px rgb(0 0 0 / 0.3));
+  --shadow-lg: 0 12px 28px -10px rgb(0 0 0 / 0.5), 0 2px 6px rgb(0 0 0 / 0.25);
+  --shadow-xl: 0 40px 80px -30px rgb(0 0 0 / 0.65), 0 10px 28px -14px rgb(0 0 0 / 0.4);
+}
+
+[data-theme="dark"] .bg-canvas {
+  background-color: var(--surface-subtle);
+  background-image:
+    radial-gradient(760px 420px at 88% -6%, rgb(201 138 0 / 0.10), transparent 62%),
+    radial-gradient(680px 480px at -6% 106%, rgb(35 172 118 / 0.10), transparent 60%),
+    radial-gradient(500px 380px at 108% 92%, rgb(24 63 107 / 0.14), transparent 62%);
+}
+
+/* ===========================================================================
+   App base (non-token — PRESERVE across token syncs)
+   ---------------------------------------------------------------------------
+   Mobile-first / app-ready helpers for the responsive codebase (later wrapped
+   as an app via webview/PWA). These are NOT design tokens — do NOT move them
+   into tokens.css and do NOT change any token VALUES. They reuse existing
+   tokens for all colors/spacing; they only add device-aware layout behavior.
+   =========================================================================== */
+@layer utilities {
+  /* Safe-area padding for FIXED top/bottom bars (notch + home indicator).
+     Put on a wrapper WITHOUT competing padding on that axis; base padding goes
+     on the inner element. env() resolves to 0 on non-notched screens. */
+  .pt-safe { padding-top: max(0px, env(safe-area-inset-top)); }
+  .pb-safe { padding-bottom: max(0px, env(safe-area-inset-bottom)); }
+  .pl-safe { padding-left: max(0px, env(safe-area-inset-left)); }
+  .pr-safe { padding-right: max(0px, env(safe-area-inset-right)); }
+  /* Logical twins — these mirror with `dir`, so prefer them over pl-/pr-safe. */
+  .ps-safe { padding-inline-start: max(0px, env(safe-area-inset-left)); }
+  .pe-safe { padding-inline-end: max(0px, env(safe-area-inset-right)); }
+
+  /* Momentum scrolling for internal scroll containers in iOS webviews. */
+  .scroll-touch {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  /* ---- Squared paper for the shell's content area (AppShell <main>) --------
+     WAS a cahier ruling — full-width lines every 32px. Lines have a direction,
+     and that was the problem: a rule running edge to edge behind a grid of
+     cards either lines up with a card edge (and reads as a mistake) or misses
+     it by a hair (and reads as a worse mistake), and on a wide desktop shell it
+     dragged the eye horizontally across a page whose content is columns.
+
+     A DOT LATTICE says the same thing — squared exercise-book paper, the
+     Tunisian cahier — with none of that. It has no direction, so it never
+     argues with an edge; it disappears under content and only shows in the gaps
+     between cards, which is exactly where texture is wanted. Two lattices, not
+     one: the 32px field is the shell's own spacing beat, and a second, softer
+     dot every 128px lands dead centre between four of them, giving the field a
+     slow second rhythm so it reads as paper rather than as a screen pattern.
+
+     `local` attachment pins the lattice to the CONTENT, so it scrolls with the
+     page the way print on paper does instead of standing still behind it.
+
+     Raw rgb rather than a token — same call as `.bg-canvas` above: a texture
+     wash at ~5-13% alpha is a value no semantic colour carries, and the alpha
+     is the whole point. The hue is the system's own navy (#173f6d). In dark it
+     flips to a white wash — navy dots on a deep ground would just disappear. */
+  .bg-paper {
+    background-image:
+      radial-gradient(circle at center, rgb(23 63 109 / 0.17) 1.1px, transparent 1.2px),
+      radial-gradient(circle at center, rgb(23 63 109 / 0.09) 1.9px, transparent 2px);
+    background-size: 32px 32px, 128px 128px;
+    background-position: 16px 16px, 80px 80px;
+    background-attachment: local;
+  }
+  [data-theme="dark"] .bg-paper {
+    background-image:
+      radial-gradient(circle at center, rgb(255 255 255 / 0.12) 1.1px, transparent 1.2px),
+      radial-gradient(circle at center, rgb(255 255 255 / 0.06) 1.9px, transparent 2px);
+  }
+
+  /* THE app ground (see AppShell). COLOUR ONLY, so it composes with anything
+     drawn over it rather than replacing it — `.bg-paper` above used to run its
+     dot lattice on top, and can again by putting that class back on <main>.
+     It is flat for now: texture everywhere is texture competing with content.
+     It used to be a fixed parchment hex. Bound to `--brand-50` it follows
+     `data-palette` — زبرجد grounds the page in its blue-green, crépuscule in
+     its violet — and it follows dark mode too, where every ramp inverts and
+     `--brand-50` is the DEEPEST step rather than the palest. */
+  .bg-tint {
+    background-color: var(--brand-50);
+  }
+
+  /* Diagonal "speed" stripes over a progress fill (RunnerProgress). The tile is
+     square so the 45° pattern repeats seamlessly, and the drift is exactly one
+     tile — no visible seam. Still under prefers-reduced-motion. */
+  .bg-stripes {
+    background-image: linear-gradient(
+      45deg,
+      rgb(255 255 255 / 0.28) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgb(255 255 255 / 0.28) 50%,
+      rgb(255 255 255 / 0.28) 75%,
+      transparent 75%,
+      transparent
+    );
+    background-size: 8px 8px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .bg-stripes {
+      animation: wael-stripes 700ms linear infinite;
+    }
+  }
+
+  /* ---- The matière card's living backdrop (StudentSubjectsScreen) ----------
+     Three layers, all coloured by the matière's OWN measured tint (see
+     subjectTint.ts) and all animating transform/opacity only, so a full grid of
+     them stays on the compositor and costs nothing to scroll.
+
+       .wael-rings   the concentric ring ladder, breathing in place;
+       .wael-ripple  one ring swelling out from BEHIND the drawing and fading,
+                     the way a drop lands in water. Two of them, half a cycle
+                     apart, so a card is never quite still;
+       .wael-aura    a soft off-centre glow drifting a slow figure behind
+                     everything, so the backdrop has depth instead of being a
+                     flat swatch with rings drawn on it.
+
+     Each takes its colour from a `--ripple` / `--aura` custom property the card
+     sets inline — the tint is measured per matière in JS, so it can't live in a
+     stylesheet. Under prefers-reduced-motion nothing moves and the ripples stay
+     invisible: what's left is the static ring ladder, which is a finished design
+     on its own. */
+  .wael-ripple {
+    border: 1.5px solid var(--ripple, transparent);
+    opacity: 0;
+  }
+  .wael-aura {
+    background: radial-gradient(circle closest-side, var(--aura, transparent), transparent);
+    opacity: 0.75;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .wael-rings {
+      animation: wael-breathe 9s ease-in-out infinite;
+    }
+    .wael-ripple {
+      animation: wael-ripple 5.6s ease-out infinite;
+    }
+    .wael-aura {
+      animation: wael-drift 14s ease-in-out infinite;
+    }
+  }
+
+  /* ---- One drifting letter (FloatingLetters, the Arabic matière card) -------
+     `--rise` / `--sway` / `--peak` come off the element: every letter travels
+     its own distance at its own weight (see the table in FloatingLetters.tsx),
+     which is what makes the layer read as depth rather than as one sheet of
+     glyphs sliding past.
+
+     It takes its colour from `--ink`, so it flips with the theme on its own —
+     near-white on the dark plates, deep navy on the light ones — and the alpha
+     lives in the opacity, never in the colour, so the value stays composited.
+
+     Still, at rest: under prefers-reduced-motion the letters hold their
+     starting positions at peak opacity, which is a scattered alphabet behind
+     the drawing — the same idea, just not moving. */
+  .wael-letter {
+    color: var(--ink);
+    opacity: var(--peak, 0.16);
+    will-change: transform, opacity;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .wael-letter {
+      /* Duration and delay are per-letter, set inline. */
+      animation-name: wael-letter;
+      animation-timing-function: cubic-bezier(0.4, 0, 0.35, 1);
+      animation-iteration-count: infinite;
+    }
+  }
+}
+
+/* The ripple starts INSIDE the medallion (0.86) — hidden behind the drawing —
+   and only becomes visible as it clears the disc, so it reads as coming out
+   from under the art rather than being drawn on the card. It ends past the 4:3
+   corner (1.9), so it leaves the box instead of stopping in it. */
+@keyframes wael-panel-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes wael-ripple {
+  0% {
+    opacity: 0;
+    transform: scale(0.86);
+  }
+  20% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.9);
+  }
+}
+
+/* A breath, not a pulse: 4.5 % over nine seconds is felt more than seen. */
+@keyframes wael-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.045);
+  }
+}
+
+/* Percent translation on a layer that is 140 % of the box, so the glow wanders
+   a long way without its soft edge ever entering frame. */
+@keyframes wael-drift {
+  0%,
+  100% {
+    transform: translate(-6%, -4%) scale(1);
+  }
+  33% {
+    transform: translate(7%, 3%) scale(1.08);
+  }
+  66% {
+    transform: translate(2%, 6%) scale(0.96);
+  }
+}
+
+/* A letter's climb: in from nothing at the bottom of its lane, out into nothing
+   near the top. It fades for MOST of the trip (in over the first fifth, out over
+   the last third) rather than popping — a glyph that appears at full strength
+   reads as a bug on a card this small. The sway is applied at the far end only,
+   so the path curves instead of tracking a straight diagonal. */
+@keyframes wael-letter {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  20%,
+  66% {
+    opacity: var(--peak, 0.16);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--sway, 0px), calc(-1 * var(--rise, 60px)), 0);
+  }
+}
+
+/* RTL: the fill grows right→left, so the stripes must drift the same way. */
+@keyframes wael-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -8px 0;
+  }
+}
+
+@layer base {
+  /* App-like: no grey tap flash on touch. */
+  body {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* THE HAND. Tailwind v4's preflight leaves buttons on `cursor: default` (it
+     dropped v3's pointer), which on a prototype whose whole point is « tout est
+     cliquable » reads as a dead page: the élève hovers a séance card and gets
+     an arrow. One rule, so it holds for every button in the app instead of
+     thirteen scattered `cursor-pointer` classes. Disabled controls keep the
+     arrow — they aren't going anywhere. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  summary,
+  label[for] {
+    cursor: pointer;
+  }
+}
+
+/* ===========================================================================
+   Arabic / RTL base (non-token — PRESERVE across token syncs)
+   ---------------------------------------------------------------------------
+   The product ships in Tunisian Arabic with <html lang="ar-TN" dir="rtl">.
+   Arabic is a joined script, so anything that pulls glyphs apart or fakes a
+   weight breaks the letterforms. These rules undo the Latin typographic
+   habits baked into the utility classes; they change NO token values.
+   =========================================================================== */
+@layer base {
+  /* Tracking severs the connections between joined Arabic letters. The kicker
+     pattern (`uppercase tracking-[.12em]`) is all over the app, so neutralize
+     it globally rather than hunting every site. `!important` is needed to beat
+     the equally-specific Tailwind `tracking-*` utilities. */
+  [dir="rtl"] * {
+    letter-spacing: normal !important;
+  }
+
+  /* Arabic has no letter case — `uppercase`/`capitalize` are no-ops on Arabic
+     glyphs but would still shout at any Latin fragment (a subject code, "PDF")
+     sitting inside an Arabic string. Leave those alone at their own size. */
+
+  /* Latin runs inside Arabic text (names, "Bac", codes, times) must not drag
+     the surrounding line direction around. */
+  [dir="rtl"] :is(input, textarea) {
+    text-align: start;
+  }
+
+  /* `dir="auto"` is on every user-authored string in the app (offer names,
+     subject titles, file names, people). It does the ONE job we want — a Latin
+     title like "Turbo Pro Max" keeps its own internal order instead of being
+     reshuffled by the Arabic paragraph around it — but it also flips that
+     element's `direction`, and `text-align: start` then resolves to the WRONG
+     edge: the title jumps to the left of its card while everything beside it
+     stays right. Alignment belongs to the PAGE, not to the string, so pin it
+     back to the page's start edge. Base layer, so an explicit `text-center` /
+     `text-end` utility still wins where a screen asked for one. */
+  [dir="rtl"] [dir="auto"]:not(input, textarea) {
+    text-align: right;
+  }
+
+  [dir="ltr"] [dir="auto"]:not(input, textarea) {
+    text-align: left;
+  }
+
+  /* Numbers, prices, dates, and times stay Western digits (Tunisian usage) and
+     must always read left-to-right even mid-sentence. */
+  .num {
+    direction: ltr;
+    unicode-bidi: isolate;
+    display: inline-block;
+  }
+}

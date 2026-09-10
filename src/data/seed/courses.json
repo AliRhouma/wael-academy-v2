@@ -1,0 +1,7 @@
+[
+  { "id": "c-math-bac", "name": "رياضيات — باك", "teacherId": "t-karim", "level": "رابعة علوم" },
+  { "id": "c-math-college", "name": "رياضيات — إعدادي", "teacherId": "t-karim", "level": "تاسعة" },
+  { "id": "c-phys-term", "name": "فيزياء — سنة باك", "teacherId": "t-leila", "level": "باك علوم" },
+  { "id": "c-fr-a2", "name": "فرنسية — مستوى A2", "teacherId": "t-sonia", "level": "إعدادي" },
+  { "id": "c-eng-b1", "name": "أنڤليزية — مستوى B1", "teacherId": "t-nabil", "level": "ثانوي" }
+]

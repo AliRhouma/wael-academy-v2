@@ -1,0 +1,42 @@
+[
+  {
+    "id": "cmt-01",
+    "kind": "lesson",
+    "videoId": "l-cx-cours",
+    "userId": "u-student-sarra",
+    "body": "الجزء متاع الطويلة والعمدة ولّى واضح أخيرا. الرسم الصغير في الدقيقة 12 فكّني 🙏",
+    "createdAt": "2026-07-14T18:42:00.000Z"
+  },
+  {
+    "id": "cmt-02",
+    "kind": "lesson",
+    "videoId": "l-cx-cours",
+    "userId": "u-st-selim",
+    "body": "شكون ينجّم يفهّمني الانتقال للشكل الأسّي؟ عاودت شفتو مرّتين وما دخلش لعقلي.",
+    "createdAt": "2026-07-16T09:05:00.000Z"
+  },
+  {
+    "id": "cmt-03",
+    "kind": "lesson",
+    "videoId": "l-cx-cours",
+    "userId": "u-st-wassim",
+    "body": "@سليم تكتب z = |z|(cos θ + i sin θ) وبعد تبدّل القوسين بـ e^(iθ). ما هي كان كتابة أخرى.",
+    "createdAt": "2026-07-16T13:20:00.000Z"
+  },
+  {
+    "id": "cmt-04",
+    "kind": "seance",
+    "videoId": "ses-rec-10",
+    "userId": "u-student-sarra",
+    "body": "كنت غايبة نهارتها، التسجيل فكّني. الصوت باهي برشا.",
+    "createdAt": "2025-10-05T17:20:00.000Z"
+  },
+  {
+    "id": "cmt-05",
+    "kind": "seance",
+    "videoId": "ses-rec-10",
+    "userId": "u-st-emna",
+    "body": "خسارة اللوحة ما تبانش الكل في بعض الأوقات، أما برك الحصّة تتّبع مليح.",
+    "createdAt": "2025-10-06T08:00:00.000Z"
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "id": "sub-mohamed-bacmath",
+    "userId": "u-student",
+    "offerId": "offer-turbo-pro-max",
+    "price": 2300,
+    "tag": "بالأقساط",
+    "description": "3 أقساط على طول العام الدراسي — الأوّل وقت التسجيل.",
+    "installments": [
+      { "id": "inst-mo-1", "amount": 1000, "dueDate": "2026-06-15" },
+      { "id": "inst-mo-2", "amount": 700, "dueDate": "2026-07-25" },
+      { "id": "inst-mo-3", "amount": 600, "dueDate": "2026-12-15" }
+    ],
+    "deadline": "2027-06-30",
+    "state": "active",
+    "createdAt": "2026-06-20T10:15:00.000Z"
+  },
+  {
+    "id": "sub-ines-bacmath",
+    "userId": "u-student-ines",
+    "offerId": "offer-turbo-pro-max",
+    "price": 2300,
+    "tag": "كاش",
+    "description": "الخلاص الكل مرّة وحدة وقت التسجيل.",
+    "installments": [{ "id": "inst-in-1", "amount": 2300, "dueDate": "2026-09-01" }],
+    "deadline": "2027-06-30",
+    "state": "active",
+    "createdAt": "2026-06-28T09:40:00.000Z"
+  },
+  {
+    "id": "sub-youssef-9",
+    "userId": "u-student-youssef",
+    "offerId": "offer-turbo",
+    "price": 1700,
+    "tag": "بالأقساط",
+    "description": "زوز أقساط: الأوّل قبل العودة المدرسية، والباقي قبل نصف أوت.",
+    "installments": [
+      { "id": "inst-yo-1", "amount": 900, "dueDate": "2026-06-15" },
+      { "id": "inst-yo-2", "amount": 800, "dueDate": "2026-08-10" }
+    ],
+    "deadline": "2027-06-30",
+    "state": "active",
+    "createdAt": "2026-06-01T14:05:00.000Z"
+  },
+  {
+    "id": "sub-emna-bacsci",
+    "userId": "u-st-emna",
+    "offerId": "offer-turbo",
+    "price": 1700,
+    "tag": "بالأقساط",
+    "description": "زوز أقساط، كل واحد 850 دينار. الدخول موقّف حتى يتخلّص القسط الأوّل بالكامل.",
+    "installments": [
+      { "id": "inst-em-1", "amount": 850, "dueDate": "2026-07-01" },
+      { "id": "inst-em-2", "amount": 850, "dueDate": "2026-10-01" }
+    ],
+    "deadline": "2026-12-31",
+    "state": "blocked",
+    "createdAt": "2026-06-25T16:30:00.000Z"
+  },
+  {
+    "id": "sub-farah-bacinfo",
+    "userId": "u-student-farah",
+    "offerId": "offer-khotwa",
+    "price": 79,
+    "tag": "شهري",
+    "description": "خلاص شهر بشهر — يتجدّد كل بداية شهر بلا التزام.",
+    "installments": [{ "id": "inst-fa-1", "amount": 79, "dueDate": "2026-09-30" }],
+    "deadline": "2026-10-31",
+    "state": "active",
+    "createdAt": "2026-07-18T11:00:00.000Z"
+  }
+]

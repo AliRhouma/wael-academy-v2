@@ -1,0 +1,134 @@
+[
+  { "id": "y-7", "name": "سابعة أساسي", "cycle": "college", "level": "سابعة أساسي", "order": 0 },
+  { "id": "y-8", "name": "ثامنة أساسي", "cycle": "college", "level": "ثامنة أساسي", "order": 100 },
+  { "id": "y-9", "name": "تاسعة أساسي", "cycle": "college", "level": "تاسعة أساسي", "order": 200 },
+  { "id": "y-1", "name": "أولى ثانوي", "cycle": "secondaire", "level": "أولى ثانوي", "order": 1000 },
+  {
+    "id": "y-2-sci",
+    "name": "ثانية ثانوي — علوم",
+    "cycle": "secondaire",
+    "level": "ثانية ثانوي",
+    "section": "علوم",
+    "order": 1100
+  },
+  {
+    "id": "y-2-lettres",
+    "name": "ثانية ثانوي — آداب",
+    "cycle": "secondaire",
+    "level": "ثانية ثانوي",
+    "section": "آداب",
+    "order": 1101
+  },
+  {
+    "id": "y-2-eco",
+    "name": "ثانية ثانوي — اقتصاد وخدمات",
+    "cycle": "secondaire",
+    "level": "ثانية ثانوي",
+    "section": "اقتصاد وخدمات",
+    "order": 1102
+  },
+  {
+    "id": "y-2-info",
+    "name": "ثانية ثانوي — إعلامية",
+    "cycle": "secondaire",
+    "level": "ثانية ثانوي",
+    "section": "إعلامية",
+    "order": 1103
+  },
+  {
+    "id": "y-3-math",
+    "name": "ثالثة ثانوي — رياضيات",
+    "cycle": "secondaire",
+    "level": "ثالثة ثانوي",
+    "section": "رياضيات",
+    "order": 1200
+  },
+  {
+    "id": "y-3-sci",
+    "name": "ثالثة ثانوي — علوم تجريبية",
+    "cycle": "secondaire",
+    "level": "ثالثة ثانوي",
+    "section": "علوم تجريبية",
+    "order": 1201
+  },
+  {
+    "id": "y-3-eco",
+    "name": "ثالثة ثانوي — اقتصاد وتصرّف",
+    "cycle": "secondaire",
+    "level": "ثالثة ثانوي",
+    "section": "اقتصاد وتصرّف",
+    "order": 1202
+  },
+  {
+    "id": "y-3-lettres",
+    "name": "ثالثة ثانوي — آداب",
+    "cycle": "secondaire",
+    "level": "ثالثة ثانوي",
+    "section": "آداب",
+    "order": 1203
+  },
+  {
+    "id": "y-3-tech",
+    "name": "ثالثة ثانوي — علوم تقنية",
+    "cycle": "secondaire",
+    "level": "ثالثة ثانوي",
+    "section": "علوم تقنية",
+    "order": 1204
+  },
+  {
+    "id": "y-3-info",
+    "name": "ثالثة ثانوي — علوم إعلامية",
+    "cycle": "secondaire",
+    "level": "ثالثة ثانوي",
+    "section": "علوم إعلامية",
+    "order": 1205
+  },
+  {
+    "id": "y-bac-math",
+    "name": "باك — رياضيات",
+    "cycle": "bac",
+    "level": "باك",
+    "section": "رياضيات",
+    "order": 2000
+  },
+  {
+    "id": "y-bac-sci",
+    "name": "باك — علوم تجريبية",
+    "cycle": "bac",
+    "level": "باك",
+    "section": "علوم تجريبية",
+    "order": 2001
+  },
+  {
+    "id": "y-bac-eco",
+    "name": "باك — اقتصاد وتصرّف",
+    "cycle": "bac",
+    "level": "باك",
+    "section": "اقتصاد وتصرّف",
+    "order": 2002
+  },
+  {
+    "id": "y-bac-lettres",
+    "name": "باك — آداب",
+    "cycle": "bac",
+    "level": "باك",
+    "section": "آداب",
+    "order": 2003
+  },
+  {
+    "id": "y-bac-tech",
+    "name": "باك — علوم تقنية",
+    "cycle": "bac",
+    "level": "باك",
+    "section": "علوم تقنية",
+    "order": 2004
+  },
+  {
+    "id": "y-bac-info",
+    "name": "باك — علوم إعلامية",
+    "cycle": "bac",
+    "level": "باك",
+    "section": "علوم إعلامية",
+    "order": 2005
+  }
+]
