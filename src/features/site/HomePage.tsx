@@ -26,7 +26,7 @@ import {
   useRail,
   useVideo,
 } from "./parts"
-import { SIGN_UP } from "./SiteLayout"
+import { OFFERS, SIGN_UP } from "./SiteLayout"
 
 const PHOTOS = { atef: teacherAtef, jawher: teacherJawher, kholoud: teacherKholoud }
 
@@ -227,7 +227,7 @@ function Levels() {
         {level.text}
       </p>
       <Link
-        to={`${SIGN_UP}/offres`}
+        to={OFFERS}
         onClick={(e) => e.stopPropagation()}
         className={cn(role === "main" ? cn(btnLime, "mt-6") : "mt-5 inline-flex min-h-11 items-center rounded-xl border border-v2-ink px-8 text-[calc(9px*var(--ts))] font-bold transition hover:bg-v2-ink hover:text-white")}
       >
@@ -370,7 +370,7 @@ function Offers({ onPlay }: { onPlay: () => void }) {
           <p className="mt-4 text-[calc(15px*var(--ts))] font-light leading-snug md:text-[calc(22px*var(--ts))]">
             {offer.body} <span className="font-bold text-v2-cta">{offer.highlight}</span>
           </p>
-          <Link to={`${SIGN_UP}/offres`} className={cn(btnLime, "mt-8")}>
+          <Link to={OFFERS} className={cn(btnLime, "mt-8")}>
             اختر الآن
           </Link>
         </div>
@@ -513,7 +513,7 @@ function Pricing() {
                         </li>
                       ))}
                     </ul>
-                    <Link to={`${SIGN_UP}/offres`} className={cn(btnLime, "mt-5")}>
+                    <Link to={OFFERS} className={cn(btnLime, "mt-5")}>
                       اشترك في {o.name}
                       <ArrowLeft className="size-5" />
                     </Link>

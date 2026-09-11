@@ -7,6 +7,9 @@ Two areas, one app:
 |---|---|
 | `/` | Public landing — hero, stats, levels, 3 steps, teachers, offers, success stories, pricing, FAQ, blog |
 | `/a-propos` | « شكون نحنا » — our story, mission / vision / values, press & community |
+| `/connexion` | Sign in — the « Log In » frame; phone **or** email + password |
+| `/inscription` | Sign up — name, phone, level, the level's optional matière, password |
+| `/mot-de-passe-oublie` | Reset — phone, then the SMS code + a new password (with « ما وصلنيش الكود ») |
 | `/student-v2` | Élève dashboard — recent replays, live session, calendar, homework |
 | `/student-v2/calendrier` | Week calendar (time grid) + day list |
 | `/student-v2/seances` | Recordings by subject (all 17 subject portraits) |
@@ -15,6 +18,12 @@ Two areas, one app:
 | `/student-v2/offres` | Offers — the current offer and the others, side by side |
 
 Screens not designed yet (matières, groupes…) show a placeholder in the same style.
+
+The door follows the real flow of `student.waelacademy.com`, step for step, in the
+« Log In » design. **No backend:** sign in with **29340118 / wael1234**, and the
+reset code is always **123456** (printed on screen — nothing is sent). A brand-new
+account signs in under its own name and lands in an empty space, which is where
+every empty state is on show.
 
 ## Run
 

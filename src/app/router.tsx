@@ -11,6 +11,9 @@ import V2SubjectRecordingsScreen from "@/features/student-v2/recordings/SubjectR
 import V2CalendarScreen from "@/features/student-v2/calendar/CalendarScreen"
 import V2VideoScreen from "@/features/student-v2/video/VideoScreen"
 import V2OffersScreen from "@/features/student-v2/offers/OffersScreen"
+import LoginPage from "@/features/auth/LoginPage"
+import RegisterPage from "@/features/auth/RegisterPage"
+import ForgotPasswordPage from "@/features/auth/ForgotPasswordPage"
 
 function NotFound() {
   return (
@@ -29,6 +32,7 @@ function NotFound() {
 /**
  * Wael Academy v2 — two areas, from the Figma redesign:
  *   /             the public site (landing + « شكون نحنا »)
+ *   /connexion    the door — sign in, sign up, reset the password
  *   /student-v2   the élève space
  */
 export const router = createBrowserRouter([
@@ -40,6 +44,11 @@ export const router = createBrowserRouter([
       { path: "a-propos", element: <SiteAbout /> },
     ],
   },
+  /* The door — « Log In » and the two screens it opens onto. Outside every
+     shell: no header, no rail. */
+  { path: "/connexion", element: <LoginPage /> },
+  { path: "/inscription", element: <RegisterPage /> },
+  { path: "/mot-de-passe-oublie", element: <ForgotPasswordPage /> },
   {
     path: "/student-v2",
     element: <V2Layout />,

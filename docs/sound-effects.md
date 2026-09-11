@@ -49,6 +49,7 @@ that don't come from a click call `sfx("<cue>")` in code. The élève can mute
 | `src/features/student-v2/sound.ts` | **The only place that talks to uisfx.** Lazy player singleton (`soundPlayer()`), `sfx(cue)`, `useSound()` (reactive `{enabled, pack}`), `setSoundEnabled()`, `setSoundPack()`, `mountSound()`, `PACK_LABELS`, `DEFAULT_PACK`. |
 | `src/features/student-v2/V2Layout.tsx` | `useEffect(() => mountSound(), [])` — binds `data-uisfx` on the **whole document** while the space is mounted (so dialogs, sheets and Radix menus, which portal to `<body>`, are covered) and unlocks Web Audio on the first real pointer/key. Unbinds and stops all sound on unmount. |
 | `src/features/student-v2/V2Shell.tsx` | `SoundToggle` — the speaker button in the top bar (phone + desktop). |
+| `src/features/auth/AuthFrame.tsx` | The same `mountSound()`, for the screens **outside** the space (`/connexion`, `/inscription`, `/mot-de-passe-oublie`) — the binding lives on the document, so a screen that never mounts `V2Layout` has to mount it itself or its `data-uisfx` attributes are silent. |
 | `src/features/student-v2/demoStates.tsx` | `SoundRow` in the « حالات » dock: on/off + the 12 packs (tapping a pack switches the whole space and plays a sample). |
 | `scripts/check-sounds.mjs` | `npm run check:sounds` — validates every cue name used (see §8). |
 
@@ -94,6 +95,7 @@ to the élève, not by what the widget looks like.
 
 | Screen / component | Element → cue |
 |---|---|
+| **The door** `features/auth/*` | logo & « الرجوع إلى الصفحة الرئيسية » → `back` · « نسيت كلمة السر؟ » / « أعمل كونط » → `forward` · « تسجيل الدخول » (from sign-up) / « أرجع للدخول » → `back` · reveal eye → `toggle-on`/`toggle-off` · level & optional-matière select → `select` · signed in / account made → `connect`, refused → `error` · « ابعث الكود » / « أرجع ابعث الكود » / « ابعث الطلب » → `send` · « ما وصلنيش الكود » → `expand` · password changed → `success` |
 | **Shell** `V2Shell.tsx` | rail & bottom-bar links → `select` · logo → `back` · settings gear → `press` · « خروج » → `disconnect` · speaker → plays `toggle-on` when turned on |
 | **Header** `header/*` | bell → `notification` · « علّم الكل مقروء » → `check` · a notification → `open` · avatar menu → `open`, items → `select`, logout → `disconnect` · search result → `select` (Enter → `select`, or `error` when nothing matches) · clear search → `delete` |
 | **Dashboard** `dashboard/*` | recent replay card → `play` · « الكل » (`SeeAll`) → `forward` · live « أدخل للمباشر » → `connect` · « تفاصيل الحصّة » / « شوف الرزنامة » → `forward` · « وثائق الحصّة » → `open` · « شوف التسجيل » → `play` · calendar collapse → `expand`/`collapse` · week/month arrows → `swipe` · « رجوع لليوم » → `back` · day chip / month cell / view item → `select` · view switch → `open` · « أقرب حصّة » → `forward` · séance title & homework chip → `open` |

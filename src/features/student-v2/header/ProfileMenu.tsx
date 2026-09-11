@@ -74,7 +74,7 @@ export function ProfileMenu({ compact = false }: { compact?: boolean }) {
             data-uisfx="disconnect"
             onSelect={() => {
               logout()
-              navigate("/")
+              navigate("/connexion")
             }}
             className={cn(itemClass, "text-v2-live-strong data-[highlighted]:bg-v2-live/10")}
           >

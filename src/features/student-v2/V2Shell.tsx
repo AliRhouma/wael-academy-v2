@@ -110,7 +110,7 @@ function Rail() {
         data-uisfx="disconnect"
         onClick={() => {
           logout()
-          navigate("/")
+          navigate("/connexion")
         }}
         className="group mx-4 mb-8 mt-auto flex min-h-12 items-center gap-3.5 rounded-2xl px-4 text-[calc(11px*var(--ts))] font-medium text-v2-ink/85 transition hover:bg-v2-live/[0.07] hover:text-v2-live-strong xl:mx-6"
       >

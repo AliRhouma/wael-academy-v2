@@ -8,10 +8,11 @@ import lockup from "@/assets/v2/logo-lockup.png"
 import { NAV } from "./content"
 import { Facebook, Instagram, TikTok, btnLime, btnOutline, container } from "./parts"
 
-/** Where the site's two calls to action lead — no auth in this prototype,
- *  so both land in the élève space with the demo student. */
-export const SIGN_UP = "/student-v2"
-export const SIGN_IN = "/student-v2"
+/** Where the site's two calls to action lead — the door, now that it exists. */
+export const SIGN_UP = "/inscription"
+export const SIGN_IN = "/connexion"
+/** The offers, as the élève space shows them — where every « اختر الآن » lands. */
+export const OFFERS = "/student-v2/offres"
 
 function Logo({ tone = "ink", className }: { tone?: "ink" | "white"; className?: string }) {
   return (
