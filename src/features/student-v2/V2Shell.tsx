@@ -1,5 +1,5 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom"
-import { LogOut, Settings } from "lucide-react"
+import { LogOut, Settings, Volume2, VolumeX } from "lucide-react"
 import { studentV2Nav } from "@/app/nav/studentV2"
 import { useAuth } from "@/stores/useAuth"
 import { cn } from "@/lib/utils"
@@ -7,6 +7,7 @@ import lockup from "@/assets/v2/logo-lockup.png"
 import mark from "@/assets/v2/logo-mark.png"
 import { BASE } from "./lib"
 import { V2GradientDefs, iconBtnClass } from "./ui"
+import { setSoundEnabled, useSound } from "./sound"
 import { SearchBox } from "./header/SearchBox"
 import { NotificationsMenu } from "./header/NotificationsMenu"
 import { ProfileMenu } from "./header/ProfileMenu"
@@ -65,6 +66,7 @@ function Rail() {
     <aside className="fixed inset-y-0 start-0 z-30 hidden w-60 flex-col border-e border-v2-ink/[0.05] bg-v2-rail pt-safe backdrop-blur-xl lg:flex xl:w-[16.5rem] 2xl:w-[17.5rem]">
       <Link
         to={BASE}
+        data-uisfx="back"
         className="mx-auto mb-10 mt-10 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-v2-brand xl:mb-14 xl:mt-14"
       >
         <Logo />
@@ -76,6 +78,7 @@ function Rail() {
             key={path}
             to={path}
             end={path === BASE}
+            data-uisfx="select"
             className={({ isActive }) =>
               cn(
                 "group relative flex min-h-12 items-center gap-3.5 rounded-2xl px-4 text-[calc(13.5px*var(--ts))] transition 2xl:min-h-14 2xl:text-[calc(15px*var(--ts))] focus-visible:outline-2 focus-visible:outline-v2-brand",
@@ -104,6 +107,7 @@ function Rail() {
 
       <button
         type="button"
+        data-uisfx="disconnect"
         onClick={() => {
           logout()
           navigate("/")
@@ -114,6 +118,26 @@ function Rail() {
         خروج
       </button>
     </aside>
+  )
+}
+
+/**
+ * The speaker — sound on / off, remembered. Turning it on answers with a
+ * sound, so the élève hears that it worked; off is silent by definition.
+ */
+function SoundToggle() {
+  const { enabled } = useSound()
+  return (
+    <button
+      type="button"
+      onClick={() => setSoundEnabled(!enabled)}
+      aria-pressed={enabled}
+      aria-label={enabled ? "سكّر الأصوات" : "شعّل الأصوات"}
+      title={enabled ? "سكّر الأصوات" : "شعّل الأصوات"}
+      className={iconBtnClass}
+    >
+      {enabled ? <Volume2 className="size-6" strokeWidth={1.6} /> : <VolumeX className="size-6 text-v2-ink/45" strokeWidth={1.6} />}
+    </button>
   )
 }
 
@@ -136,10 +160,11 @@ function TopBar() {
       {/* Phone / tablet: mark + actions, then the greeting, then the search. */}
       <div className="flex flex-col gap-4 lg:hidden">
         <div className="flex items-center gap-2">
-          <Link to={BASE} className="rounded-lg p-1">
+          <Link to={BASE} data-uisfx="back" className="rounded-lg p-1">
             <Logo compact />
           </Link>
           <div className="ms-auto flex items-center gap-1">
+            <SoundToggle />
             <NotificationsMenu />
             <ProfileMenu compact />
           </div>
@@ -153,9 +178,10 @@ function TopBar() {
         <Greeting className="shrink-0 text-[calc(19px*var(--ts))] xl:text-[calc(23px*var(--ts))] 2xl:text-[calc(26px*var(--ts))]" />
         <SearchBox className="mx-auto w-full max-w-[36rem] flex-1 2xl:max-w-[38rem]" />
         <div className="flex shrink-0 items-center gap-2">
+          <SoundToggle />
           <NotificationsMenu />
           <span aria-hidden className="h-9 w-px bg-v2-ink/20" />
-          <Link to={`${BASE}/parametres`} aria-label="الإعدادات" className={iconBtnClass}>
+          <Link to={`${BASE}/parametres`} aria-label="الإعدادات" data-uisfx="press" className={iconBtnClass}>
             <Settings className="size-6" strokeWidth={1.6} />
           </Link>
           <span aria-hidden className="h-9 w-px bg-v2-ink/20" />
@@ -178,6 +204,7 @@ function BottomBar() {
             <NavLink
               to={path}
               end={path === BASE}
+              data-uisfx="select"
               className={({ isActive }) =>
                 cn(
                   "relative flex min-h-16 flex-col items-center justify-center gap-1 px-0.5 text-[calc(7px*var(--ts))] transition",

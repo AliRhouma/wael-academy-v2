@@ -31,6 +31,7 @@ export function ProfileMenu({ compact = false }: { compact?: boolean }) {
       <DropdownMenu.Trigger asChild>
         <button
           type="button"
+          data-uisfx="open"
           aria-label="الحساب"
           className="group flex min-h-11 items-center gap-2.5 rounded-full p-0.5 pe-2 transition hover:bg-v2-ink/[0.05] focus-visible:outline-2 focus-visible:outline-v2-brand data-[state=open]:bg-v2-ink/[0.05]"
         >
@@ -63,13 +64,14 @@ export function ProfileMenu({ compact = false }: { compact?: boolean }) {
           </div>
           <DropdownMenu.Separator className="mx-2 mb-1 h-px bg-v2-ink/10" />
           {links.map(({ label, icon: Icon, to }) => (
-            <DropdownMenu.Item key={to} onSelect={() => navigate(to)} className={itemClass}>
+            <DropdownMenu.Item key={to} data-uisfx="select" onSelect={() => navigate(to)} className={itemClass}>
               <Icon className="size-5 stroke-v2-grad" strokeWidth={1.75} />
               {label}
             </DropdownMenu.Item>
           ))}
           <DropdownMenu.Separator className="mx-2 my-1 h-px bg-v2-ink/10" />
           <DropdownMenu.Item
+            data-uisfx="disconnect"
             onSelect={() => {
               logout()
               navigate("/")

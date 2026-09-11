@@ -1,9 +1,11 @@
+import { useEffect, useRef } from "react"
 import { ArrowLeft, Check, CheckCircle2, Files, FolderOpen } from "lucide-react"
 import { dateKey } from "@/features/student/calendar/schedule"
 import { cn } from "@/lib/utils"
 import { useDownloads } from "../downloads"
 import { BASE, relativeDay, useLookups, type SessionDoc } from "../lib"
 import { Panel, PanelEmpty, SeeAll, ctaClass } from "../ui"
+import { sfx } from "../sound"
 
 /**
  * « تمارين والكور متع الحصص الجاية » — a packing list: the files to have on
@@ -40,6 +42,19 @@ export function DocsPanel({
   const { has } = useDownloads()
   const taken = allTaken ? docs.length : docs.filter((d) => has(d.id)).length
   const done = docs.length > 0 && taken === docs.length
+
+  // The whole packing list taken — the week's small victory gets its fanfare.
+  // Only on the élève's own last download (not on load, not the demo's forced
+  // « done »), and after the download's own « success » has had its moment.
+  const wasDone = useRef(done)
+  useEffect(() => {
+    if (done && !wasDone.current && !allTaken) {
+      const t = window.setTimeout(() => sfx("achievement"), 380)
+      wasDone.current = done
+      return () => window.clearTimeout(t)
+    }
+    wasDone.current = done
+  }, [done, allTaken])
 
   const meta =
     docs.length === 0

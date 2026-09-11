@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { useDownloads } from "./downloads"
 import { dayLabel, useLookups, useSessionDocs } from "./lib"
 import { PanelEmpty, ctaClass } from "./ui"
+import { sfx } from "./sound"
 
 /**
  * « وثائق الحصّة » / « الكور متع الحصّة » — the séance's files in one list.
@@ -23,6 +24,10 @@ export function DocsSheet({
 }) {
   const mobile = useIsMobile()
   const open = !!session
+  const change = (o: boolean) => {
+    if (!o) sfx("close")
+    onOpenChange(o)
+  }
   const docs = useSessionDocs(session, started)
   const { subjectOf, teacherName } = useLookups()
   const { has, download } = useDownloads()
@@ -83,7 +88,7 @@ export function DocsSheet({
 
   if (mobile) {
     return (
-      <Sheet open={open} onOpenChange={onOpenChange}>
+      <Sheet open={open} onOpenChange={change}>
         <SheetContent
           side="bottom"
           className="max-h-[85dvh] gap-3 overflow-y-auto rounded-t-3xl border-v2-ink/10 bg-v2-surface px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 text-v2-ink"
@@ -98,7 +103,7 @@ export function DocsSheet({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={change}>
       <DialogContent className="gap-3 rounded-3xl border-v2-ink/15 bg-v2-surface p-6 text-v2-ink sm:max-w-lg">
         <DialogTitle className="text-[calc(12px*var(--ts))] font-bold text-v2-ink">{title}</DialogTitle>
         <DialogDescription className="-mt-2 text-[calc(8px*var(--ts))] text-v2-ink/55">{description}</DialogDescription>

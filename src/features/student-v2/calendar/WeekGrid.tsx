@@ -93,7 +93,7 @@ export function WeekGrid({
               <button
                 key={key}
                 type="button"
-                onClick={() => onSelect(key)}
+                data-uisfx="select" onClick={() => onSelect(key)}
                 aria-pressed={isSel}
                 aria-label={`${dayLabel(key)}${n ? ` — ${n} حصص` : ""}`}
                 className={cn(
@@ -160,7 +160,7 @@ export function WeekGrid({
                   type="button"
                   tabIndex={-1}
                   aria-hidden
-                  onClick={() => onSelect(key)}
+                  data-uisfx="select" onClick={() => onSelect(key)}
                   className="absolute inset-0 cursor-pointer"
                 />
                 {list.map((s) => (
@@ -192,7 +192,7 @@ export function WeekGrid({
                 <p className="mt-1 text-[calc(10.5px*var(--ts))] font-bold text-v2-ink">ما عندك حتّى حصّة الجمعة هذي</p>
                 <p className="text-[calc(8.5px*var(--ts))] text-v2-ink/55">أسبوع فاضي — وقت باش تراجع ولّا تشوف تسجيلات.</p>
                 {nextAfter && (
-                  <button type="button" onClick={() => onSelect(nextAfter.date)} className={cn(ctaClass, "mt-2")}>
+                  <button type="button" data-uisfx="forward" onClick={() => onSelect(nextAfter.date)} className={cn(ctaClass, "mt-2")}>
                     أقرب حصّة: {dayLabel(nextAfter.date)}
                     <ChevronLeft className="size-4" />
                   </button>
@@ -229,7 +229,7 @@ function Block({
   return (
     <button
       type="button"
-      onClick={onOpen}
+      data-uisfx="focus" onClick={onOpen}
       aria-label={`حصّة ${subjectOf(session)?.name ?? ""} — ${dayLabel(session.date)} ${session.startTime}`}
       className={cn(
         "group absolute inset-x-1 z-10 flex flex-col overflow-hidden rounded-xl border-s-[3px] px-2 py-1.5 text-start transition hover:z-30 hover:shadow-lg hover:shadow-v2-ink/10 focus-visible:outline-2 focus-visible:outline-v2-brand",

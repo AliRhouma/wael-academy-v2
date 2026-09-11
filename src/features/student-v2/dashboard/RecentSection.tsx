@@ -35,7 +35,7 @@ export function RecentSection({ sessions, now }: { sessions: Session[]; now: Dat
             icon={MonitorPlay}
             title="ما تزادت حتّى حصّة جديدة"
             body="كي يتنشر تسجيل حصّة جديدة، يظهرلك هوني قبل كلّ شيء."
-            action={<CtaLink to={`${BASE}/seances`}>شوف التسجيلات الكل</CtaLink>}
+            action={<CtaLink data-uisfx="forward" to={`${BASE}/seances`}>شوف التسجيلات الكل</CtaLink>}
           />
         </div>
       ) : (
@@ -72,7 +72,7 @@ function SeanceCard({ session, now }: { session: Session; now: Date }) {
   const fresh = !!session.publishedAt && session.publishedAt.slice(0, 10) === dateKey(now)
 
   return (
-    <Link
+    <Link data-uisfx="play"
       to={v2VideoPath(session.id, { subjectId: session.subjectIds[0] })}
       className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-v2-ink/15 bg-v2-surface transition duration-300 hover:-translate-y-1 hover:border-v2-brand/40 hover:shadow-xl hover:shadow-v2-ink/[0.07] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-v2-brand"
     >

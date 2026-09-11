@@ -108,7 +108,7 @@ export default function V2SubjectRecordingsScreen() {
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-5 md:gap-6">
-      <Link
+      <Link data-uisfx="back"
         to={`${BASE}/seances`}
         className="inline-flex min-h-11 w-fit items-center gap-2 rounded-full pe-3 text-[calc(9.5px*var(--ts))] font-medium text-v2-ink/75 transition hover:text-v2-brand"
       >
@@ -141,7 +141,7 @@ export default function V2SubjectRecordingsScreen() {
             icon={MonitorPlay}
             title={`مازال ما تنشر حتّى تسجيل في ${subject?.name ?? "المادّة هذي"}`}
             body="كي يكمّل الأستاذ حصّة وينزّل التسجيل متاعها، يظهرلك هوني."
-            action={<CtaLink to={`${BASE}/seances`}>رجوع للتسجيلات</CtaLink>}
+            action={<CtaLink data-uisfx="back" to={`${BASE}/seances`}>رجوع للتسجيلات</CtaLink>}
           />
         </div>
       ) : (
@@ -154,7 +154,7 @@ export default function V2SubjectRecordingsScreen() {
                 <button
                   key={g.id}
                   type="button"
-                  onClick={() => setParam("groupe", g.id)}
+                  data-uisfx="select" onClick={() => setParam("groupe", g.id)}
                   aria-pressed={active}
                   title={g.title}
                   className={cn(
@@ -186,7 +186,7 @@ export default function V2SubjectRecordingsScreen() {
                     type="button"
                     role="tab"
                     aria-selected={y === year}
-                    onClick={() => setParam("annee", yearSlug(y))}
+                    data-uisfx="toggle-on" onClick={() => setParam("annee", yearSlug(y))}
                     className={cn(
                       "min-h-9 rounded-full px-3 text-[calc(7.5px*var(--ts))] font-semibold tabular-nums transition",
                       y === year ? "bg-v2-ink text-white" : "text-v2-ink/60 hover:text-v2-ink",
@@ -262,7 +262,7 @@ function Trimesters({
           >
             <button
               type="button"
-              onClick={() => has && toggle(t.n)}
+              data-uisfx={has ? (on ? "collapse" : "expand") : "blocked"} onClick={() => has && toggle(t.n)}
               disabled={!has}
               aria-expanded={on}
               className={cn("flex w-full items-center gap-3 p-4 text-start md:p-5", on && "bg-v2-brand/[0.06]", !has && "cursor-default")}
@@ -394,14 +394,14 @@ function RecordingRow({
   const shell = "group block rounded-2xl border p-4 transition"
   if (locked) {
     return (
-      <Link to={`${BASE}/offres`} className={cn(shell, "border-v2-ink/10 bg-v2-ink/[0.025] hover:border-v2-brand/40")}>
+      <Link data-uisfx="blocked" to={`${BASE}/offres`} className={cn(shell, "border-v2-ink/10 bg-v2-ink/[0.025] hover:border-v2-brand/40")}>
         {body}
       </Link>
     )
   }
   if (!ready) return <div className={cn(shell, "border-dashed border-v2-ink/15 bg-v2-surface/60")}>{body}</div>
   return (
-    <Link
+    <Link data-uisfx="play"
       to={v2VideoPath(session.id, { subjectId: session.subjectIds[0], groupId })}
       className={cn(shell, "border-v2-ink/10 bg-v2-ink/[0.025] hover:border-v2-brand/40 hover:bg-v2-surface hover:shadow-lg hover:shadow-v2-ink/[0.06]")}
     >

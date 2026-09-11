@@ -108,7 +108,7 @@ export default function V2VideoScreen() {
           icon={MonitorPlay}
           title="الفيديو هذا ما تلقاش"
           body="ما عادش موجود، ولّا مازال ما تنشرش."
-          action={<CtaLink to={`${BASE}/seances`}>رجوع للتسجيلات</CtaLink>}
+          action={<CtaLink data-uisfx="back" to={`${BASE}/seances`}>رجوع للتسجيلات</CtaLink>}
         />
       </div>
     )
@@ -140,7 +140,7 @@ export default function V2VideoScreen() {
 
   return (
     <div className="flex flex-col gap-4">
-      <Link
+      <Link data-uisfx="back"
         to={backTo}
         className="inline-flex min-h-11 w-fit items-center gap-2 rounded-full pe-3 text-[calc(9.5px*var(--ts))] font-medium text-v2-ink/75 transition hover:text-v2-brand"
       >
@@ -180,7 +180,7 @@ export default function V2VideoScreen() {
             {!started && (
               <button
                 type="button"
-                onClick={() => {
+                data-uisfx="play" onClick={() => {
                   setStarted(true)
                   if (player.ready) player.toggle()
                 }}
@@ -203,11 +203,11 @@ export default function V2VideoScreen() {
 
           {/* « السابق · 1/6 · الجاي » — previous on the start side, as read. */}
           <div className="mt-3 flex items-center justify-between">
-            <StepButton label="السابق" onClick={go(prev?.to)} icon={<SkipForward className="size-4" />} />
+            <StepButton label="السابق" sound="skip-previous" onClick={go(prev?.to)} icon={<SkipForward className="size-4" />} />
             <span className="text-[calc(8.5px*var(--ts))] tabular-nums text-v2-ink/70" dir="ltr">
               {Math.max(index, 0) + 1}/{source.rail.length}
             </span>
-            <StepButton label="الجاي" onClick={go(next?.to)} icon={<SkipBack className="size-4" />} end />
+            <StepButton label="الجاي" sound="skip-next" onClick={go(next?.to)} icon={<SkipBack className="size-4" />} end />
           </div>
 
           <div className="mt-4">
@@ -284,10 +284,23 @@ export default function V2VideoScreen() {
   )
 }
 
-function StepButton({ label, onClick, icon, end = false }: { label: string; onClick?: () => void; icon: ReactNode; end?: boolean }) {
+function StepButton({
+  label,
+  sound,
+  onClick,
+  icon,
+  end = false,
+}: {
+  label: string
+  sound: string
+  onClick?: () => void
+  icon: ReactNode
+  end?: boolean
+}) {
   return (
     <button
       type="button"
+      data-uisfx={sound}
       onClick={onClick}
       disabled={!onClick}
       className={cn(

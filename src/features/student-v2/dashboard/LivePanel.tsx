@@ -108,7 +108,7 @@ function OnAir({ session }: { session: Session }) {
         </div>
       </div>
 
-      <Link
+      <Link data-uisfx="connect"
         to={`${BASE}/seance/${session.id}`}
         className="group mt-1 inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-[calc(10px*var(--ts))] font-semibold text-v2-ink transition hover:text-v2-live-strong"
       >
@@ -153,12 +153,12 @@ function Countdown({ session, left, soon }: { session: Session | null; left: num
       {session && <SessionLine session={session} />}
       {session &&
         (soon ? (
-          <Link to={`${BASE}/seance/${session.id}`} className={cn(ctaClass, "mt-3")}>
+          <Link data-uisfx="connect" to={`${BASE}/seance/${session.id}`} className={cn(ctaClass, "mt-3")}>
             <Video className="size-5" strokeWidth={1.75} />
             أدخل للمباشر
           </Link>
         ) : (
-          <Link
+          <Link data-uisfx="forward"
             to={`${BASE}/seance/${session.id}`}
             className="group mt-2 inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-[calc(10px*var(--ts))] font-semibold text-v2-ink transition hover:text-v2-brand"
           >
@@ -195,13 +195,13 @@ function Ended({
       </p>
       <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
         {onOpenDocs && (
-          <button type="button" onClick={() => onOpenDocs(session, true)} className={cn(ctaClass, "border border-v2-ink")}>
+          <button type="button" data-uisfx="open" onClick={() => onOpenDocs(session, true)} className={cn(ctaClass, "border border-v2-ink")}>
             <FileCheck2 className="size-5" strokeWidth={1.75} />
             وثائق الحصّة
           </button>
         )}
         {session.recordingUrl && (
-          <Link to={v2VideoPath(session.id, { subjectId: session.subjectIds[0] })} className={liveOutlineClass}>
+          <Link data-uisfx="play" to={v2VideoPath(session.id, { subjectId: session.subjectIds[0] })} className={liveOutlineClass}>
             <CirclePlay className="size-5" strokeWidth={1.75} />
             شوف التسجيل
           </Link>
@@ -229,7 +229,7 @@ function Postponed({ session, next, now }: { session: Session; next: Session | n
           {relativeDay(next.date, now)} على {next.startTime}
         </p>
       )}
-      <Link
+      <Link data-uisfx="forward"
         to={`${BASE}/calendrier`}
         className="group mt-2 inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-[calc(10px*var(--ts))] font-semibold text-v2-ink transition hover:text-v2-brand"
       >
@@ -255,7 +255,7 @@ function Nothing({ next, now }: { next: Session | null; now: Date }) {
               {relativeDay(next.date, now)} على {next.startTime}
             </p>
           )}
-          <Link to={`${BASE}/calendrier`} className={ctaClass}>
+          <Link data-uisfx="forward" to={`${BASE}/calendrier`} className={ctaClass}>
             شوف الرزنامة
             <ArrowLeft className="size-4" />
           </Link>

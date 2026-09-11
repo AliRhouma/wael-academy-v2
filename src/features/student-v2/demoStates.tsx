@@ -1,8 +1,9 @@
 import { createContext, useContext, useState, type ReactNode } from "react"
-import { Eye, Layers, RotateCcw, X } from "lucide-react"
+import { Eye, Layers, RotateCcw, Volume2, X } from "lucide-react"
 import { setGazeMode, useGazeMode } from "@/app/gaze"
 import { useMediaQuery } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
+import { PACK_LABELS, setSoundEnabled, setSoundPack, useSound } from "./sound"
 
 /**
  * The states each panel of the new space can be in, and a small dock to flip
@@ -163,6 +164,51 @@ const ROWS: { key: Key; label: string; options: { value: string; label: string }
 ]
 
 /**
+ * Sound — on/off and the FEEL, auditioned in place: picking a pack switches
+ * the whole space to it and plays a sample, so the twelve can be compared by
+ * ear in a few taps. Remembered (see `sound.ts`).
+ */
+function SoundRow() {
+  const { enabled, pack } = useSound()
+  const chip = (active: boolean) =>
+    cn(
+      "min-h-9 rounded-full border px-3 text-[calc(7.5px*var(--ts))] font-semibold transition",
+      active ? "border-transparent bg-v2-grad text-white" : "border-v2-ink/15 text-v2-ink/75 hover:border-v2-brand/50 hover:text-v2-ink",
+    )
+  return (
+    <div>
+      <p className="mb-1.5 flex items-center gap-1.5 text-[calc(8px*var(--ts))] font-semibold text-v2-ink/70">
+        <Volume2 className="size-4" /> الأصوات <span className="font-normal text-v2-ink/45">· UI SFX (CC0)</span>
+      </p>
+      <div className="flex flex-wrap gap-1.5">
+        <button type="button" aria-pressed={enabled} onClick={() => setSoundEnabled(true)} className={chip(enabled)}>
+          شاعلة
+        </button>
+        <button type="button" aria-pressed={!enabled} onClick={() => setSoundEnabled(false)} className={chip(!enabled)}>
+          مطفية
+        </button>
+      </div>
+      {enabled && (
+        <div className="mt-2 grid grid-cols-3 gap-1.5">
+          {PACK_LABELS.map((p) => (
+            <button
+              key={p.pack}
+              type="button"
+              title={p.hint}
+              aria-pressed={pack === p.pack}
+              onClick={() => setSoundPack(p.pack)}
+              className={cn(chip(pack === p.pack), "px-2")}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+/**
  * Wael's eyes — the app-wide gaze switch (`app/gaze.ts`, also the S key),
  * surfaced here because it is otherwise invisible: it survives a reload, and S
  * is also a demo key on the old dashboard, so it is easy to switch off by
@@ -189,7 +235,7 @@ function GazeRow() {
               key={String(value)}
               type="button"
               aria-pressed={active}
-              onClick={() => setGazeMode(value ? (mode === "always" ? "always" : "on") : "off")}
+              data-uisfx={value ? "wake" : "sleep"} onClick={() => setGazeMode(value ? (mode === "always" ? "always" : "on") : "off")}
               className={cn(
                 "min-h-9 rounded-full border px-3 text-[calc(8px*var(--ts))] font-semibold transition",
                 active
@@ -212,7 +258,7 @@ function GazeRow() {
           </p>
           <button
             type="button"
-            onClick={() => setGazeMode("always")}
+            data-uisfx="wake" onClick={() => setGazeMode("always")}
             className="mt-1.5 min-h-9 rounded-full bg-v2-cta px-3 text-[calc(7.5px*var(--ts))] font-semibold text-v2-on-cta"
           >
             شغّلها رغم هذا
@@ -252,7 +298,7 @@ export function StatesDock() {
             <div className="flex items-center gap-1">
               <button
                 type="button"
-                onClick={reset}
+                data-uisfx="undo" onClick={reset}
                 aria-label="رجّع الكل للحقيقي"
                 className="grid size-9 place-items-center rounded-full text-v2-ink/60 transition hover:bg-v2-ink/5 hover:text-v2-ink"
               >
@@ -260,7 +306,7 @@ export function StatesDock() {
               </button>
               <button
                 type="button"
-                onClick={() => setOpen(false)}
+                data-uisfx="close" onClick={() => setOpen(false)}
                 aria-label="سكّر"
                 className="grid size-9 place-items-center rounded-full text-v2-ink/60 transition hover:bg-v2-ink/5 hover:text-v2-ink"
               >
@@ -269,6 +315,7 @@ export function StatesDock() {
             </div>
           </div>
           <div className="flex flex-col gap-3 p-4">
+            <SoundRow />
             <GazeRow />
             {ROWS.map((row) => (
               <div key={row.key}>
@@ -281,7 +328,7 @@ export function StatesDock() {
                         key={o.value}
                         type="button"
                         aria-pressed={active}
-                        onClick={() => set(row.key, o.value as never)}
+                        data-uisfx="toggle-on" onClick={() => set(row.key, o.value as never)}
                         className={cn(
                           "min-h-9 rounded-full border px-3 text-[calc(8px*var(--ts))] font-semibold transition",
                           active
@@ -301,7 +348,7 @@ export function StatesDock() {
       )}
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        data-uisfx={open ? "close" : "open"} onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-label="حالات الشاشة"
         className="relative ms-auto grid size-12 place-items-center rounded-full bg-v2-grad text-white shadow-lg transition hover:brightness-105 active:scale-95"

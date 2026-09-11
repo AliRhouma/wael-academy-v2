@@ -7,6 +7,7 @@ import { useData } from "@/stores/useData"
 import { cn } from "@/lib/utils"
 import avatar from "@/assets/v2/avatar.jpg"
 import { Panel } from "../ui"
+import { sfx } from "../sound"
 
 /** "من 3 يام" — a comment is about recency, not about a calendar date. */
 function ago(iso: string): string {
@@ -63,6 +64,7 @@ export function V2CommentsPanel({ kind, videoId, demoEmpty }: { kind: VideoRefKi
     const text = body.trim()
     if (!text || !user) return
     addComment({ kind, videoId, userId: user.id, body: text })
+    sfx("send")
     setBody("")
   }
   const name = (id: string) => users.find((u) => u.id === id)?.name ?? "تلميذ"
@@ -118,7 +120,7 @@ export function V2CommentsPanel({ kind, videoId, demoEmpty }: { kind: VideoRefKi
                 {mine && (
                   <button
                     type="button"
-                    onClick={() => removeComment(c.id)}
+                    data-uisfx="delete" onClick={() => removeComment(c.id)}
                     aria-label="امسح تعليقي"
                     className="grid size-10 shrink-0 place-items-center rounded-full text-v2-ink/45 transition hover:bg-v2-live/10 hover:text-v2-live-strong"
                   >

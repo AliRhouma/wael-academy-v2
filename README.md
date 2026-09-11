@@ -28,6 +28,11 @@ Stack: Vite · React 19 · TypeScript · Tailwind v4 · React Router · lucide-r
 No backend — all data is an in-memory store seeded from `src/data/seed/*.json`
 (resets on refresh).
 
+## Docs
+
+- **[docs/sound-effects.md](docs/sound-effects.md)** — the sound-effects system of the élève space: source & license (UI SFX, MIT + CC0), how it's wired, the meaning → cue grammar, where every cue is used, and the checklist for adding sound to new features (chat, messages, delete…). **Read it before adding any interaction.** Validate with `npm run check:sounds`.
+- [AGENTS.md](AGENTS.md) — short instructions for coding agents.
+
 ## Demo controls
 
 - **حالات (states) dock** — the green layers button, bottom corner of the élève
@@ -35,6 +40,7 @@ No backend — all data is an in-memory store seeded from `src/data/seed/*.json`
   (live / soon / countdown / ended / postponed / none, empty lists, a crowded
   playlist…). Also settable by URL: `?live=soon`, `?docs=done`, `?calendar=empty`,
   `?playlist=many`, `?comments=empty`, `?offers=none`, `?view=month`.
+- **Sound** — speaker in the top bar mutes/unmutes; the dock's « الأصوات » row switches between 12 sound packs (default `arcade`).
 - **S** — switches Wael's cursor-following eyes on/off (remembered). The dock's
   « عيون وائل » row does the same, and can override the OS reduced-motion setting.
 

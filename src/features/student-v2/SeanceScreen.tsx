@@ -39,7 +39,7 @@ export default function V2SeanceScreen() {
     <div className="flex flex-col gap-6">
       <button
         type="button"
-        onClick={() => (window.history.length > 1 ? navigate(-1) : navigate(BASE))}
+        data-uisfx="back" onClick={() => (window.history.length > 1 ? navigate(-1) : navigate(BASE))}
         className="inline-flex min-h-11 w-fit items-center gap-2 rounded-full pe-3 text-[calc(10px*var(--ts))] font-medium text-v2-ink transition hover:text-v2-brand"
       >
         <ArrowRight className="size-5" />
@@ -65,7 +65,7 @@ export default function V2SeanceScreen() {
             {state === "en-cours" && (
               <button
                 type="button"
-                onClick={() => notify("نحلّولك zoom… (نموذج — ما فمّاش رابط حقيقي)")}
+                data-uisfx="connect" onClick={() => notify("نحلّولك zoom… (نموذج — ما فمّاش رابط حقيقي)")}
                 className={cn(liveOutlineClass, "bg-v2-live text-white hover:bg-v2-live/90")}
               >
                 <Video className="size-5" />
@@ -80,7 +80,7 @@ export default function V2SeanceScreen() {
             )}
             {state === "terminee" &&
               (session.recordingUrl ? (
-                <Link to={v2VideoPath(session.id, { subjectId: session.subjectIds[0] })} className={liveOutlineClass}>
+                <Link data-uisfx="play" to={v2VideoPath(session.id, { subjectId: session.subjectIds[0] })} className={liveOutlineClass}>
                   <CirclePlay className="size-5" />
                   شوف التسجيل
                 </Link>
@@ -105,7 +105,7 @@ export default function V2SeanceScreen() {
               title="ما فمّا حتّى وثيقة مازال"
               body="الأستاذ ينزّل الكور نهار الحصّة. كي يوصل، يظهرلك هوني."
               action={
-                <CtaLink to={BASE}>
+                <CtaLink data-uisfx="back" to={BASE}>
                   رجوع للرئيسية <ArrowLeft className="size-4" />
                 </CtaLink>
               }

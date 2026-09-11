@@ -1,5 +1,6 @@
-import { createContext, useCallback, useContext, useState, type ReactNode } from "react"
+import { createContext, useCallback, useContext, useRef, useState, type ReactNode } from "react"
 import { useToast } from "@/components/kit/Toast"
+import { sfx } from "./sound"
 
 /**
  * « اضغط للتحميل » — there is no real file behind a mock PDF, so a download is
@@ -18,10 +19,16 @@ const DownloadsContext = createContext<Ctx | null>(null)
 
 export function DownloadsProvider({ children }: { children: ReactNode }) {
   const [taken, setTaken] = useState<Set<string>>(() => new Set())
+  // Mirrors `taken` for the click handler — the sound decision must not live in
+  // a state updater (React may run those twice).
+  const takenRef = useRef(taken)
+  takenRef.current = taken
   const { toast, show } = useToast()
 
   const download = useCallback(
     (id: string, name: string) => {
+      // A first download is a small win; taking the same file again is just a tap.
+      sfx(takenRef.current.has(id) ? "press" : "success")
       setTaken((prev) => new Set(prev).add(id))
       show(`بدا تحميل « ${name} »`)
     },

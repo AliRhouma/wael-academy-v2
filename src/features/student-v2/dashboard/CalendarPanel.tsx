@@ -119,7 +119,7 @@ export function CalendarPanel({
       action={
         <button
           type="button"
-          onClick={() => setCollapsed((c) => !c)}
+          data-uisfx={collapsed ? "expand" : "collapse"} onClick={() => setCollapsed((c) => !c)}
           aria-expanded={!collapsed}
           aria-label={collapsed ? "افتح الروزنامة" : "سكّر الروزنامة"}
           className={iconBtnClass}
@@ -133,17 +133,17 @@ export function CalendarPanel({
           {/* Month + view switch. On a phone the step arrows live here too, so
               the strip below gets the full width for its seven days. */}
           <div className="flex items-center gap-2">
-            <button type="button" onClick={back} aria-label="اللّي قبل" className={cn(iconBtnClass, "size-10 sm:hidden", view === "month" && "sm:grid")}>
+            <button type="button" data-uisfx="swipe" onClick={back} aria-label="اللّي قبل" className={cn(iconBtnClass, "size-10 sm:hidden", view === "month" && "sm:grid")}>
               <ChevronRight className="size-5" />
             </button>
             <p className="text-[calc(12px*var(--ts))] font-bold text-v2-ink md:text-[calc(13px*var(--ts))]">{label}</p>
-            <button type="button" onClick={forward} aria-label="اللّي بعد" className={cn(iconBtnClass, "size-10 sm:hidden", view === "month" && "sm:grid")}>
+            <button type="button" data-uisfx="swipe" onClick={forward} aria-label="اللّي بعد" className={cn(iconBtnClass, "size-10 sm:hidden", view === "month" && "sm:grid")}>
               <ChevronLeft className="size-5" />
             </button>
             {offToday && (
               <button
                 type="button"
-                onClick={goToday}
+                data-uisfx="back" onClick={goToday}
                 className="min-h-9 rounded-full bg-v2-brand/10 px-3 text-[calc(7.5px*var(--ts))] font-semibold text-v2-brand transition hover:bg-v2-brand/20"
               >
                 رجوع لليوم
@@ -209,7 +209,7 @@ export function WeekStrip({
 }) {
   return (
     <div className="flex items-center gap-1.5 sm:gap-2">
-      <button type="button" onClick={() => onStep(-1)} aria-label="الجمعة اللّي فاتت" className={cn(iconBtnClass, "hidden size-9 sm:grid")}>
+      <button type="button" data-uisfx="swipe" onClick={() => onStep(-1)} aria-label="الجمعة اللّي فاتت" className={cn(iconBtnClass, "hidden size-9 sm:grid")}>
         <ChevronRight className="size-5 text-v2-ink/60" />
       </button>
       <div className="grid flex-1 grid-cols-7 gap-1.5 sm:gap-2">
@@ -225,7 +225,7 @@ export function WeekStrip({
             <button
               key={key}
               type="button"
-              onClick={() => onSelect(key)}
+              data-uisfx="select" onClick={() => onSelect(key)}
               aria-pressed={isSel}
               aria-label={`${dayLabel(key)}${list.length ? ` — ${list.length} حصص` : ""}`}
               className={cn(
@@ -254,7 +254,7 @@ export function WeekStrip({
           )
         })}
       </div>
-      <button type="button" onClick={() => onStep(1)} aria-label="الجمعة الجاية" className={cn(iconBtnClass, "hidden size-9 sm:grid")}>
+      <button type="button" data-uisfx="swipe" onClick={() => onStep(1)} aria-label="الجمعة الجاية" className={cn(iconBtnClass, "hidden size-9 sm:grid")}>
         <ChevronLeft className="size-5 text-v2-ink/60" />
       </button>
     </div>
@@ -271,6 +271,7 @@ function ViewSwitch({ view, onChange, className }: { view: View; onChange: (v: V
       <DropdownMenu.Trigger asChild>
         <button
           type="button"
+          data-uisfx="open"
           className={cn(
             "group flex min-h-10 min-w-[6.5rem] items-center justify-between gap-3 rounded-2xl border border-v2-ink/20 bg-v2-surface px-4 text-[calc(8.5px*var(--ts))] font-medium text-v2-ink transition hover:border-v2-brand/50 data-[state=open]:border-v2-brand/50",
             className,
@@ -289,7 +290,7 @@ function ViewSwitch({ view, onChange, className }: { view: View; onChange: (v: V
           {options.map((o) => (
             <DropdownMenu.Item
               key={o.value}
-              onSelect={() => onChange(o.value)}
+              data-uisfx="select" onSelect={() => onChange(o.value)}
               className="flex min-h-10 cursor-pointer items-center justify-between gap-3 rounded-xl px-3 text-[calc(8.5px*var(--ts))] outline-none data-[highlighted]:bg-v2-ink/[0.05]"
             >
               {o.label}
@@ -340,7 +341,7 @@ export function DayList({
         </p>
         <p className="text-[calc(8.5px*var(--ts))] text-v2-ink/55">نهار فاضي — فرصة باش تراجع ولّا تشوف تسجيل.</p>
         {next && (
-          <button type="button" onClick={() => onPick(next.date)} className={cn(ctaClass, "mt-2")}>
+          <button type="button" data-uisfx="forward" onClick={() => onPick(next.date)} className={cn(ctaClass, "mt-2")}>
             أقرب حصّة: {dayLabel(next.date)}
             <ChevronLeft className="size-4" />
           </button>
@@ -403,7 +404,7 @@ export function SessionCard({
         </span>
       </header>
 
-      <Link
+      <Link data-uisfx="open"
         to={`${BASE}/seance/${session.id}`}
         className={cn(
           "mt-3 block rounded-lg text-[calc(10.5px*var(--ts))] font-medium text-v2-ink hover:text-v2-brand",
@@ -423,7 +424,7 @@ export function SessionCard({
           {hw.length > 0 && (
             <button
               type="button"
-              onClick={() => onOpenDocs(session, false)}
+              data-uisfx="open" onClick={() => onOpenDocs(session, false)}
               className="inline-flex min-h-8 items-center gap-1.5 rounded-full bg-v2-chip-docs/15 px-3 text-[calc(7.5px*var(--ts))] font-semibold text-v2-chip-docs transition hover:bg-v2-chip-docs/25"
             >
               <Paperclip className="size-3.5" />
@@ -435,7 +436,7 @@ export function SessionCard({
 
       {live && (
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-          <button type="button" onClick={() => onOpenDocs(session, true)} className={cn(ctaClass, "min-w-[14rem]")}>
+          <button type="button" data-uisfx="open" onClick={() => onOpenDocs(session, true)} className={cn(ctaClass, "min-w-[14rem]")}>
             <Files className="size-5" strokeWidth={1.75} />
             الكور متع الحصّة
           </button>
@@ -451,7 +452,7 @@ export function SessionCard({
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <button
               type="button"
-              onClick={() => onOpenDocs(session, true)}
+              data-uisfx="open" onClick={() => onOpenDocs(session, true)}
               className={cn(ctaClass, "border border-v2-ink")}
             >
               <FileCheck2 className="size-5" strokeWidth={1.75} />
@@ -460,7 +461,7 @@ export function SessionCard({
             {session.recordingUrl ? (
               // Straight to the player: the button promises the replay, so it
               // shouldn't stop at the séance page on the way.
-              <Link to={v2VideoPath(session.id, { subjectId: session.subjectIds[0] })} className={liveOutlineClass}>
+              <Link data-uisfx="play" to={v2VideoPath(session.id, { subjectId: session.subjectIds[0] })} className={liveOutlineClass}>
                 <CirclePlay className="size-5" strokeWidth={1.75} />
                 شوف التسجيل
               </Link>
@@ -562,7 +563,7 @@ function MonthGrid({
             <button
               key={key}
               type="button"
-              onClick={() => onPick(key)}
+              data-uisfx="select" onClick={() => onPick(key)}
               aria-label={`${dayLabel(key)}${list.length ? ` — ${list.length} حصص` : ""}`}
               className={cn(
                 "flex min-h-12 flex-col items-stretch gap-1 rounded-xl border p-1.5 text-start transition md:min-h-[4.75rem]",

@@ -10,6 +10,7 @@ import { useData } from "@/stores/useData"
 import { cn } from "@/lib/utils"
 import { useDemoStates } from "../demoStates"
 import { ctaClass } from "../ui"
+import { sfx } from "../sound"
 
 const PHONE = "+216 50 40 43"
 const EMAIL = "contact@waelacademy.com"
@@ -52,7 +53,10 @@ export default function V2OffersScreen() {
 
   const [asked, setAsked] = useState<Set<string>>(() => new Set())
   const [dialog, setDialog] = useState<{ kind: "contact" } | { kind: "plan" | "subscribe"; offer: Offer } | null>(null)
-  const close = () => setDialog(null)
+  const close = () => {
+    sfx("close")
+    setDialog(null)
+  }
 
   const label = "text-[calc(10px*var(--ts))] font-bold text-v2-ink md:text-[calc(11px*var(--ts))]"
 
@@ -65,7 +69,7 @@ export default function V2OffersScreen() {
         </div>
         <button
           type="button"
-          onClick={() => setDialog({ kind: "contact" })}
+          data-uisfx="open" onClick={() => setDialog({ kind: "contact" })}
           className="inline-flex min-h-11 items-center gap-2 rounded-full border border-v2-ink/20 bg-v2-surface px-5 text-[calc(9px*var(--ts))] font-semibold text-v2-ink transition hover:border-v2-brand hover:text-v2-brand"
         >
           <MessageSquareText className="size-5" strokeWidth={1.75} />
@@ -105,7 +109,7 @@ export default function V2OffersScreen() {
         <Info className="mt-0.5 size-5 shrink-0 text-v2-brand" strokeWidth={1.75} />
         <span>
           العرض يتفعّل من عند الأكاديمية:{" "}
-          <button type="button" onClick={() => setDialog({ kind: "contact" })} className="font-bold text-v2-brand underline-offset-4 hover:underline">
+          <button type="button" data-uisfx="open" onClick={() => setDialog({ kind: "contact" })} className="font-bold text-v2-brand underline-offset-4 hover:underline">
             اكتبلها من هنا
           </button>{" "}
           ولّا{" "}
@@ -239,12 +243,12 @@ function OfferColumn({
         </p>
       ) : (
         <div className="grid grid-cols-2 gap-2">
-          <button type="button" onClick={onSubscribe} className={cn(ctaClass, "px-3")}>
+          <button type="button" data-uisfx="open" onClick={onSubscribe} className={cn(ctaClass, "px-3")}>
             اشترك الآن
           </button>
           <button
             type="button"
-            onClick={onPlan}
+            data-uisfx="open" onClick={onPlan}
             className="inline-flex min-h-11 items-center justify-center rounded-full border border-v2-ink/20 bg-v2-surface px-3 text-[calc(8px*var(--ts))] font-semibold text-v2-ink transition hover:border-v2-brand hover:text-v2-brand"
           >
             تفاصيل الدفع بالتقسيط
@@ -340,7 +344,7 @@ function ContactForm({ onSent }: { onSent: () => void }) {
         placeholder="مثلاً: نحبّ نبدّل للعرض السنوي، كيفاش نعمل؟"
         className="w-full resize-none rounded-2xl border border-v2-ink/15 bg-v2-surface p-4 text-[calc(9px*var(--ts))] text-v2-ink outline-none transition placeholder:text-v2-ink/40 focus:border-v2-brand/60"
       />
-      <button type="submit" disabled={!body.trim()} className={ctaClass}>
+      <button type="submit" data-uisfx="send" disabled={!body.trim()} className={ctaClass}>
         <Send className="size-4 -scale-x-100" />
         ابعث
       </button>
@@ -423,12 +427,12 @@ function Subscribe({ offer, onSend, onPlan }: { offer: Offer; onSend: () => void
           </li>
         ))}
       </ol>
-      <button type="button" onClick={onSend} className={ctaClass}>
+      <button type="button" data-uisfx="purchase" onClick={onSend} className={ctaClass}>
         <Send className="size-4 -scale-x-100" />
         ابعث طلب الاشتراك
       </button>
       {offer.installable && (
-        <button type="button" onClick={onPlan} className="min-h-11 rounded-full text-[calc(8.5px*var(--ts))] font-semibold text-v2-brand transition hover:bg-v2-brand/10">
+        <button type="button" data-uisfx="open" onClick={onPlan} className="min-h-11 rounded-full text-[calc(8.5px*var(--ts))] font-semibold text-v2-brand transition hover:bg-v2-brand/10">
           تفاصيل الدفع بالتقسيط
         </button>
       )}

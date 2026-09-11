@@ -124,16 +124,16 @@ export default function V2CalendarScreen() {
                 {!thisWeek || selected !== today ? (
                   <button
                     type="button"
-                    onClick={() => select(today)}
+                    data-uisfx="back" onClick={() => select(today)}
                     className="me-1 min-h-9 rounded-full bg-v2-brand/10 px-3 text-[calc(7.5px*var(--ts))] font-semibold text-v2-brand transition hover:bg-v2-brand/20"
                   >
                     اليوم
                   </button>
                 ) : null}
-                <button type="button" onClick={() => step(-1)} aria-label="الجمعة اللّي فاتت" className={cn(iconBtnClass, "border border-v2-ink/15")}>
+                <button type="button" data-uisfx="swipe" onClick={() => step(-1)} aria-label="الجمعة اللّي فاتت" className={cn(iconBtnClass, "border border-v2-ink/15")}>
                   <ChevronRight className="size-5" />
                 </button>
-                <button type="button" onClick={() => step(1)} aria-label="الجمعة الجاية" className={cn(iconBtnClass, "border border-v2-ink/15")}>
+                <button type="button" data-uisfx="swipe" onClick={() => step(1)} aria-label="الجمعة الجاية" className={cn(iconBtnClass, "border border-v2-ink/15")}>
                   <ChevronLeft className="size-5" />
                 </button>
               </div>

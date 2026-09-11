@@ -95,7 +95,7 @@ export function NotificationsMenu() {
   return (
     <DropdownMenu.Root dir="rtl">
       <DropdownMenu.Trigger asChild>
-        <button type="button" aria-label={`الإشعارات${unread ? ` — ${unread} جداد` : ""}`} className={iconBtnClass}>
+        <button type="button" data-uisfx="notification" aria-label={`الإشعارات${unread ? ` — ${unread} جداد` : ""}`} className={iconBtnClass}>
           <Bell className="size-6" strokeWidth={1.6} />
           {unread > 0 && (
             <span className="absolute -top-0.5 -end-0.5 grid h-6 min-w-6 place-items-center rounded-full border-2 border-v2-surface bg-v2-grad px-1 text-[12px] font-bold leading-none text-white">
@@ -116,6 +116,7 @@ export function NotificationsMenu() {
             {unread > 0 && (
               <button
                 type="button"
+                data-uisfx="check"
                 onClick={() => setRead(new Set(items.map((n) => n.id)))}
                 className="min-h-9 rounded-full px-3 text-[calc(8px*var(--ts))] font-semibold text-v2-brand transition hover:bg-v2-brand/10"
               >
@@ -140,6 +141,7 @@ export function NotificationsMenu() {
                 return (
                   <DropdownMenu.Item
                     key={n.id}
+                    data-uisfx="open"
                     onSelect={() => {
                       setRead((prev) => new Set(prev).add(n.id))
                       navigate(n.to)

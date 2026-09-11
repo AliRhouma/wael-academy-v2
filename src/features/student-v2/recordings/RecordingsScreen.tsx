@@ -51,7 +51,7 @@ export default function V2RecordingsScreen() {
               type="button"
               role="tab"
               aria-selected={filter === value}
-              onClick={() => setFilter(value)}
+              data-uisfx="toggle-on" onClick={() => setFilter(value)}
               className={cn(
                 "min-h-10 rounded-full px-4 text-[calc(8.5px*var(--ts))] font-semibold transition",
                 filter === value ? "bg-v2-grad text-white" : "text-v2-ink/70 hover:text-v2-ink",
@@ -79,7 +79,7 @@ function ShelfCard({ shelf }: { shelf: SubjectShelf }) {
   const empty = recorded.length === 0
 
   return (
-    <Link
+    <Link data-uisfx="open"
       to={`${BASE}/seances/${subject.id}`}
       className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-v2-ink/15 bg-v2-surface transition duration-300 hover:-translate-y-1 hover:border-v2-brand/40 hover:shadow-xl hover:shadow-v2-ink/[0.07] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-v2-brand"
     >

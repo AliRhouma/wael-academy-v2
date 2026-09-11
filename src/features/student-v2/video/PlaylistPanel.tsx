@@ -101,7 +101,7 @@ export function PlaylistPanel({
               {groups.list.map((g) => {
                 const active = g.id === groups.activeId
                 return (
-                  <Link
+                  <Link data-uisfx="select"
                     key={g.id}
                     to={g.to}
                     replace
@@ -127,17 +127,18 @@ export function PlaylistPanel({
             {wide ? (
               <>
                 <IconToggle
+                  sound={expanded ? "collapse" : "expand"}
                   label={expanded ? "رجّع القائمة لقياسها" : "كبّر القائمة"}
                   onClick={() => onMode(expanded ? "split" : "list")}
                 >
                   {expanded ? <Minimize2 className="size-[18px]" /> : <Maximize2 className="size-[18px]" />}
                 </IconToggle>
-                <IconToggle label="صغّر القائمة — الفيديو ياخو البلاصة" onClick={() => onMode("video")}>
+                <IconToggle sound="collapse" label="صغّر القائمة — الفيديو ياخو البلاصة" onClick={() => onMode("video")}>
                   <PanelRightClose className="size-5" />
                 </IconToggle>
               </>
             ) : (
-              <IconToggle label={shut ? "حلّ القائمة" : "سكّر القائمة"} onClick={() => setShut((v) => !v)}>
+              <IconToggle sound={shut ? "expand" : "collapse"} label={shut ? "حلّ القائمة" : "سكّر القائمة"} onClick={() => setShut((v) => !v)}>
                 <ChevronDown className={cn("size-5 transition", shut && "rotate-180")} />
               </IconToggle>
             )}
@@ -162,7 +163,7 @@ export function PlaylistPanel({
               const active = video.id === activeId
               return (
                 <li key={video.id} className="min-w-0">
-                  <Link
+                  <Link data-uisfx="play"
                     to={video.to}
                     replace
                     aria-current={active ? "true" : undefined}
@@ -210,7 +211,7 @@ export function PlaylistPanel({
         {!wide && !shut && rows.length > 4 && (
           <button
             type="button"
-            onClick={() => setAll((v) => !v)}
+            data-uisfx={all ? "collapse" : "expand"} onClick={() => setAll((v) => !v)}
             className="mt-2 min-h-11 rounded-full text-[calc(8.5px*var(--ts))] font-semibold text-v2-brand transition hover:bg-v2-brand/10"
           >
             {all ? "صغّر" : `شوف الكل (${rows.length})`}
@@ -223,10 +224,22 @@ export function PlaylistPanel({
   )
 }
 
-function IconToggle({ label, onClick, children }: { label: string; onClick: () => void; children: ReactNode }) {
+function IconToggle({
+  label,
+  onClick,
+  sound,
+  children,
+}: {
+  label: string
+  onClick: () => void
+  /** The uisfx cue this toggle answers with. */
+  sound: string
+  children: ReactNode
+}) {
   return (
     <button
       type="button"
+      data-uisfx={sound}
       onClick={onClick}
       aria-label={label}
       title={label}
@@ -259,7 +272,7 @@ function Rail({
         shown ? "opacity-100 duration-200 delay-[380ms]" : "pointer-events-none opacity-0 duration-100",
       )}
     >
-      <IconToggle label="حلّ القائمة" onClick={onOpen}>
+      <IconToggle sound="expand" label="حلّ القائمة" onClick={onOpen}>
         <PanelRightOpen className="size-5" />
       </IconToggle>
       <span className="text-[calc(7px*var(--ts))] text-v2-ink/50">{rows.length}</span>
@@ -268,7 +281,7 @@ function Rail({
           const active = video.id === activeId
           return (
             <li key={video.id}>
-              <Link
+              <Link data-uisfx="play"
                 to={video.to}
                 replace
                 title={video.title}

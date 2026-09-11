@@ -22,12 +22,12 @@ export function V2Placeholder({ title, legacy, note }: { title: string; legacy?:
           </p>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
             {legacy && (
-              <CtaLink to={legacy}>
+              <CtaLink data-uisfx="forward" to={legacy}>
                 شوفها في الفضاء القديم
                 <ArrowLeft className="size-4" />
               </CtaLink>
             )}
-            <Link
+            <Link data-uisfx="back"
               to={BASE}
               className="inline-flex min-h-11 items-center rounded-full border border-v2-ink/20 px-5 text-[calc(9.5px*var(--ts))] font-semibold text-v2-ink transition hover:border-v2-brand/50"
             >

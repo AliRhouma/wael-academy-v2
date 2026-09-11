@@ -118,6 +118,7 @@ export function SeeAll({ to, label = "الكل" }: { to: string; label?: string 
   return (
     <Link
       to={to}
+      data-uisfx="forward"
       className="group inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full px-2 text-[calc(11px*var(--ts))] font-medium text-v2-ink transition hover:text-v2-brand"
     >
       {label}

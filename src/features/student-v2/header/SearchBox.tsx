@@ -7,6 +7,7 @@ import { useAuth } from "@/stores/useAuth"
 import { useData } from "@/stores/useData"
 import { cn } from "@/lib/utils"
 import { BASE, dayLabel, frenchName, useLookups } from "../lib"
+import { sfx } from "../sound"
 
 interface Hit {
   id: string
@@ -97,6 +98,8 @@ export function SearchBox({ className }: { className?: string }) {
       e.preventDefault()
       setActive((i) => Math.max(i - 1, 0))
     } else if (e.key === "Enter") {
+      // Enter isn't a click, so the binding can't hear it — say it here.
+      sfx(hits[active] ? "select" : "error")
       go(hits[active])
     } else if (e.key === "Escape") {
       setOpen(false)
@@ -136,6 +139,7 @@ export function SearchBox({ className }: { className?: string }) {
             type="button"
             aria-label="امسح"
             onMouseDown={(e) => e.preventDefault()}
+            data-uisfx="delete"
             onClick={() => setQ("")}
             className="grid size-9 place-items-center rounded-full text-v2-ink/50 transition hover:bg-v2-ink/5 hover:text-v2-ink"
           >
@@ -173,6 +177,7 @@ export function SearchBox({ className }: { className?: string }) {
                     aria-selected={i === active}
                     onMouseDown={(e) => e.preventDefault()}
                     onMouseEnter={() => setActive(i)}
+                    data-uisfx="select"
                     onClick={() => go(hit)}
                     className={cn(
                       "flex min-h-12 w-full items-center gap-3 rounded-2xl px-3 text-start transition",

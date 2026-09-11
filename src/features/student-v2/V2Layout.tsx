@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { useAuth } from "@/stores/useAuth"
 import { DemoStatesProvider, StatesDock } from "./demoStates"
 import { DownloadsProvider } from "./downloads"
+import { mountSound } from "./sound"
 import { V2Shell } from "./V2Shell"
 
 /**
@@ -24,6 +25,9 @@ export default function V2Layout() {
     root.setAttribute("lang", "ar-TN")
     root.setAttribute("dir", "rtl")
   }, [])
+
+  // Sound — every `data-uisfx` in the space plays its cue while it's mounted.
+  useEffect(() => mountSound(), [])
 
   if (currentRole !== "student" || !currentUser) return null
 
