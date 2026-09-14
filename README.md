@@ -12,12 +12,14 @@ Two areas, one app:
 | `/mot-de-passe-oublie` | Reset — phone, then the SMS code + a new password (with « ما وصلنيش الكود ») |
 | `/student-v2` | Élève dashboard — recent replays, live session, calendar, homework |
 | `/student-v2/calendrier` | Week calendar (time grid) + day list |
+| `/student-v2/matieres` | موادي — every matière of the élève's année, and what is published in each |
+| `/student-v2/matieres/:subjectId` | One matière — chapitres that open in place, filtered by type; parcours and examens under the head tabs |
 | `/student-v2/seances` | Recordings by subject (all 17 subject portraits) |
 | `/student-v2/seances/:subjectId` | A subject's replays, by month |
 | `/student-v2/video/seance/:id` | Video player — playlist that expands / folds to a rail |
 | `/student-v2/offres` | Offers — the current offer and the others, side by side |
 
-Screens not designed yet (matières, groupes…) show a placeholder in the same style.
+Screens not designed yet (groupes…) show a placeholder in the same style.
 
 The door follows the real flow of `student.waelacademy.com`, step for step, in the
 « Log In » design. **No backend:** sign in with **29340118 / wael1234**, and the

@@ -11,6 +11,8 @@ import V2SubjectRecordingsScreen from "@/features/student-v2/recordings/SubjectR
 import V2CalendarScreen from "@/features/student-v2/calendar/CalendarScreen"
 import V2VideoScreen from "@/features/student-v2/video/VideoScreen"
 import V2OffersScreen from "@/features/student-v2/offers/OffersScreen"
+import V2SubjectsScreen from "@/features/student-v2/matieres/SubjectsScreen"
+import V2SubjectScreen from "@/features/student-v2/matieres/SubjectScreen"
 import LoginPage from "@/features/auth/LoginPage"
 import RegisterPage from "@/features/auth/RegisterPage"
 import ForgotPasswordPage from "@/features/auth/ForgotPasswordPage"
@@ -61,7 +63,8 @@ export const router = createBrowserRouter([
       { path: "seances/:subjectId", element: <V2SubjectRecordingsScreen /> },
       { path: "offres", element: <V2OffersScreen /> },
       { path: "groupes", element: <V2Placeholder title="مجموعاتي" note="صفحة جديدة — تستنّى التصميم متاعها." /> },
-      { path: "matieres", element: <V2Placeholder title="موادك" /> },
+      { path: "matieres", element: <V2SubjectsScreen /> },
+      { path: "matieres/:subjectId", element: <V2SubjectScreen /> },
       { path: "devoirs", element: <V2Placeholder title="التمارين" /> },
       { path: "profil", element: <V2Placeholder title="بروفيلي" /> },
       { path: "parametres", element: <V2Placeholder title="الإعدادات" /> },
