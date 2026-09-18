@@ -176,6 +176,65 @@ des matières dont le catalogue n'a pas encore de chapitres (43 Anglais, 33
 > le dépôt et ne doit pas y entrer.** C'est une clé de compte : elle ouvre
 > l'API `api.bunny.net` et, de là, la clé propre à la bibliothèque.
 
+### Bunny Storage — les documents y sont aussi
+
+Les PDF ne sont **pas** dans Bunny Stream (qui ne prend que de la vidéo) mais
+dans une **zone de stockage**. Le compte en a trois :
+
+| Zone | Région | Fichiers | Contenu |
+|---|---|---|---|
+| **`wael-academy-files`** | DE | 765 | **les documents du bac** |
+| `wa-default-storage` | DE | 270 | — |
+| `wael-doc` | DE | 13 | — |
+
+Dans `wael-academy-files`, les documents suivent exactement la même convention
+que la clé : `BAC/<professeur>/[CODE] titre.pdf`.
+
+```
+BAC/eline bac/[ELINE-ECO-006] PDF V01.pdf
+BAC/Raouedha erguez FRANCAIS/[RAOUEDHA-FR-013] La cause et la conséquence.pdf
+BAC/mahdi BAC/[MAHDI-PHYS-020] pdf Cinétique chimique - Chapitre 1 - Cours et Exercices.pdf
+```
+
+**198 documents y portent un code, et les 120 codes de documents dont le
+prototype a besoin y sont tous — zéro manquant.**
+
+Lister ou télécharger (la clé de la zone se lit dans la réponse de
+`GET https://api.bunny.net/storagezone`, champ `Password`) :
+
+```bash
+# lister un dossier
+curl -H "AccessKey: <mot de passe de la zone>"      "https://storage.bunnycdn.com/wael-academy-files/BAC/eline%20bac/"
+
+# télécharger un document
+curl -H "AccessKey: <mot de passe de la zone>" -o doc.pdf      "https://storage.bunnycdn.com/wael-academy-files/BAC/eline%20bac/%5BELINE-ECO-006%5D%20PDF%20V01.pdf"
+```
+
+> **Aucune pull zone n'est branchée sur ces zones aujourd'hui.** Les documents ne
+> sont donc pas lisibles par une URL publique : il faudra soit créer une pull
+> zone (et servir `https://<pull-zone>/BAC/…`), soit passer par un proxy côté
+> serveur qui garde la clé. Ne jamais mettre la clé de zone dans le client.
+
+### Retrouver un fichier à partir de ce que montre l'écran
+
+1. **La vidéo** — le contenu porte déjà son code : `videoUrl` =
+   `wael-media:MAHDI-PHYS-022`.
+   **Le document** — le seed n'a que son titre ; son code se lit dans
+   `docs/medias-prototype.csv`, à la ligne dont `Id du contenu` vaut l'id de la
+   leçon (`les-bac-sci-phys-7-02`) et `Média` vaut `document`.
+2. **Le code dit où est le fichier.** Son préfixe est le professeur
+   (`MAHDI-PHYS` → *mahdi BAC*, `ELINE-ECO` → *eline bac*, `RAOUEDHA-FR` →
+   *Raouedha erguez FRANCAIS*…), et les colonnes `Fichier` / `Dossier` du CSV
+   donnent le nom et l'emplacement exacts.
+3. **Aller le chercher :**
+   - **une vidéo** → Bunny Stream, bibliothèque `main-library` (`512369`) ;
+     le code est dans le **titre** de la vidéo, donc
+     `GET /library/512369/videos?search=MAHDI-PHYS-022` la retrouve, et son
+     `guid` donne l'iframe `https://iframe.mediadelivery.net/embed/512369/<guid>` ;
+   - **un document** → Bunny Storage, zone `wael-academy-files`, chemin
+     `BAC/<professeur>/[CODE] titre.pdf` ;
+   - **hors ligne** → la clé USB, `E:\BAC\<professeur>\`, même nom de fichier.
+
 ### La table de correspondance : `docs/medias-prototype.csv`
 
 **C'est le document à ouvrir pour retrouver un fichier.** 999 lignes, une par
@@ -218,9 +277,10 @@ Le fichier est **régénéré** en relisant la clé ; il n'est pas maintenu à l
    n'existent aujourd'hui que dans le CSV. Cible :
    `{"name": "…", "url": "wael-media:MAHDI-PHYS-020"}` — symétrique de la vidéo,
    et `pdfSrc()` pourra les résoudre comme `videoSrc()`.
-2. **Servir les vrais médias.** Deux voies : copier les fichiers dans
-   `public/media/` et faire pointer `media.ts` dessus, ou jouer les vidéos
-   depuis Bunny (elles y sont déjà, toutes).
+2. **Servir les vrais médias.** Tout est déjà en ligne : les vidéos dans Bunny
+   Stream, les documents dans `wael-academy-files`. Il manque une **pull zone**
+   (ou un proxy) sur la zone de stockage, puis `media.ts` traduit
+   `wael-media:<code>` en URL au lieu de retomber sur la démo.
 3. **Le catalogue a avancé depuis l'import.** `chapitres-data.js` est daté du
    18/09 14:29 et contient un programme de **Maths pour le bac sciences**
    (Étude de fonction 24 · Suites réelles 8 · Nombre complexe 16) que le
