@@ -17,6 +17,7 @@ import mecanique from "../../../svg icons/doodles/mecanique.svg"
 import philosophie from "../../../svg icons/doodles/philosophie.svg"
 import physique from "../../../svg icons/doodles/physique.svg"
 import sciences from "../../../svg icons/doodles/sciences.svg"
+import { matiereKey } from "@/data/matiere"
 
 /**
  * The line drawings round each portrait, lifted out of the Figma frames
@@ -68,7 +69,7 @@ const DOODLE_BY_NAME: Record<string, string> = {
  * the card around it must carry `group` for the hover-to-front snap.
  */
 export function PortraitStage({ name, className }: { name: string; className?: string }) {
-  const doodle = DOODLE_BY_NAME[name]
+  const doodle = DOODLE_BY_NAME[matiereKey(name)]
   return (
     <div className={cn("relative aspect-[354/240] w-full", className)}>
       {doodle && (

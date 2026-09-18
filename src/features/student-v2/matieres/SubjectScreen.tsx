@@ -1,32 +1,36 @@
 import { useMemo, useState } from "react"
-import { Link, useParams, useSearchParams } from "react-router-dom"
-import { ChevronRight, FileCheck2, FileText, Library, PlayCircle, Route, Timer } from "lucide-react"
+import { Link, useParams } from "react-router-dom"
+import { ChevronRight, FileText, Library, PlayCircle, Timer } from "lucide-react"
 import { SubjectIcon } from "@/components/icons/subjects"
 import { cn } from "@/lib/utils"
-import type { Path } from "@/data/types"
-import { lessonVideoPath } from "@/features/student/player/links"
-import { useData } from "@/stores/useData"
-import { BASE, frenchName, inV2 } from "../lib"
+import { BASE, dropDay } from "../lib"
 import { PanelEmpty } from "../ui"
-import { Chip, Disc, FilesSheet, Ribbon } from "./parts"
-import { KINDS, chapterMeta, examPath, kindOf, useSubjectBundle, type ChapterBundle, type ChapterItem, type ItemKind } from "./matieres"
-
-type Tab = "parcours" | "chapitres" | "examens"
-
-const TABS: { key: Tab; label: string; icon: typeof Route }[] = [
-  { key: "parcours", label: "خطوة بخطوة", icon: Route },
-  { key: "chapitres", label: "الدروس", icon: Library },
-  { key: "examens", label: "إمتحانات", icon: FileCheck2 },
-]
+import { Chip, Disc, FilesSheet, ItemDisc, Ribbon } from "./parts"
+import {
+  FAMILIES,
+  chapterMeta,
+  familyCount,
+  familyOf,
+  kindOf,
+  useSubjectBundle,
+  type ChapterBundle,
+  type ChapterItem,
+  type KindFamily,
+} from "./matieres"
 
 /**
  * « موادي » — one matière, the frame « Main Pgae - Calendar months (7) ».
  *
- * The page is the chapitre list and nothing else: a numbered card each, shut
+ * The page is the chapitre list and NOTHING else: a numbered card each, shut
  * by default, and the one you open swells into a tinted panel carrying its own
- * filter chips and its contenus. The three head tabs swap that list for the
- * matière's parcours or its examens — the same three the old space had, so the
- * data behind them is unchanged.
+ * filter chips and its contenus.
+ *
+ * It used to open on three head tabs — parcours · الدروس · examens — with the
+ * chapitres on the middle one. Two of the three were empty in almost every
+ * matière, so the page greeted the élève with a choice between one real list
+ * and two empty ones. The chapitres ARE the matière; they no longer have to be
+ * selected. (The parcours and the examens still exist in the store and in the
+ * old space — nothing was deleted, only this page stopped asking.)
  *
  * Two things the frame decides and the code keeps:
  *   — a chapitre with nothing published is NOT a disabled row; it keeps its
@@ -35,33 +39,35 @@ const TABS: { key: Tab; label: string; icon: typeof Route }[] = [
  *   — the corner flag and the numbered disc are physical-left and
  *     reading-start respectively; the frame draws them that way in RTL.
  *
+ * What the frame got wrong and this does not: it painted the open chapitre
+ * with the brand ramp at 25 % and every corner flag with the same ramp at
+ * full — over a page that is already that ramp at 10 %. Everything came out
+ * the one dim colour, and nothing in the list looked more important than
+ * anything else. The page now has THREE registers, told apart across a room:
+ *   — the chapitre you have open is a solid deep panel, white contenus on it;
+ *   — a chapitre you can open is a white card, crisp, brand-numbered;
+ *   — a chapitre that is « soon » recedes: flat tint, no colour, no shout.
+ * And a flag's colour now carries the KIND (teal cours · navy exercice ·
+ * petrol série · violet résumé · lime quiz) instead of repeating the brand.
+ *
  * Referenced for density: SubjectRecordingsScreen (trimester accordion, locked
- * rows) and DocsPanel (file rows).
+ * rows) and DocsPanel (file rows); for card weight, SubjectsScreen — its
+ * matière cards are `border-v2-ink/15`, and this page was the only surface in
+ * the space outlining everything at /50.
  */
 export default function V2SubjectScreen() {
   const { subjectId } = useParams()
-  const [params, setParams] = useSearchParams()
-  const { subject, chapters, paths, exams, counts } = useSubjectBundle(subjectId)
-
-  const raw = params.get("tab")
-  const tab: Tab = TABS.some((t) => t.key === raw) ? (raw as Tab) : "chapitres"
-
-  function setTab(next: Tab) {
-    const p = new URLSearchParams(params)
-    if (next === "chapitres") p.delete("tab")
-    else p.set("tab", next)
-    setParams(p, { replace: true })
-  }
+  const { subject, chapters } = useSubjectBundle(subjectId)
 
   if (!subject) {
     return (
       <PanelEmpty
         icon={Library}
         title="المادة ما تلقاتش"
-        body="يمكن تبدّلت. أرجع لموادك واختار وحدة أخرى."
+        body="يمكن تبدّلت. أرجع للدروس واختار وحدة أخرى."
         action={
           <Link to={`${BASE}/matieres`} data-uisfx="back" className="font-semibold text-v2-brand hover:underline">
-            موادي
+            الدروس
           </Link>
         }
       />
@@ -70,7 +76,7 @@ export default function V2SubjectScreen() {
 
   return (
     <div className="flex flex-col gap-5 md:gap-7 2xl:gap-9">
-      <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
+      <header className="flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
         <div className="flex min-w-0 items-center gap-3 md:gap-4 2xl:gap-6">
           <span className="grid size-16 shrink-0 place-items-center md:size-20 2xl:size-[138px]">
             <SubjectIcon name={subject.name} className="size-full" />
@@ -79,34 +85,12 @@ export default function V2SubjectScreen() {
             <h1 className="truncate text-[calc(17px*var(--ts))] font-extrabold leading-tight text-v2-ink md:text-[calc(22px*var(--ts))] 2xl:text-[calc(27px*var(--ts))]">
               {subject.name}
             </h1>
-            <p className="truncate text-[calc(8.5px*var(--ts))] text-v2-ink/55 md:text-[calc(10px*var(--ts))]" dir="ltr">
-              {frenchName(subject.name) ?? ""}
-            </p>
           </div>
         </div>
 
-        <div
-          role="tablist"
-          aria-label="محتوى المادة"
-          className="-mx-4 flex gap-2.5 overflow-x-auto px-4 pb-1 md:mx-0 md:px-0 2xl:gap-4"
-        >
-          {TABS.map((t) => (
-            <Chip
-              key={t.key}
-              active={tab === t.key}
-              icon={t.icon}
-              label={t.label}
-              count={counts[t.key]}
-              onClick={() => setTab(t.key)}
-              className="2xl:min-w-[216px]"
-            />
-          ))}
-        </div>
       </header>
 
-      {tab === "chapitres" && <ChapterList chapters={chapters} />}
-      {tab === "parcours" && <PathList paths={paths} />}
-      {tab === "examens" && <ExamList subjectId={subject.id} exams={exams} />}
+      <ChapterList chapters={chapters} />
     </div>
   )
 }
@@ -125,8 +109,8 @@ function ChapterList({ chapters }: { chapters: ChapterBundle[] }) {
     return (
       <PanelEmpty
         icon={Library}
-        title="ما فمّاش دروس مازال"
-        body="الدروس متع المادة هاذي مازالوا ما تنشروش. كي يوصلوا، تلقاهم هوني مرتّبين بالفصول."
+        title="محتوى المادة يهبط قريب"
+        body={`دروس المادة هاذي يهبطو غدوة ولا بعد غدوة — ${dropDay(new Date(), true)}. كي يوصلو، تلقاهم هوني مرتّبين بالمحاور.`}
       />
     )
   }
@@ -159,26 +143,37 @@ function ChapterCard({
   onToggle: () => void
 }) {
   const { chapter, items, byKind, empty } = bundle
-  // The first kind that has something, so opening never lands on an empty list.
-  const [kind, setKind] = useState<ItemKind>(() => KINDS.find((k) => byKind[k.key] > 0)?.key ?? "cours")
+  // The first family that has something, so opening never lands on an empty list.
+  const [family, setFamily] = useState<KindFamily["key"]>(
+    () => FAMILIES.find((f) => familyCount(f, byKind) > 0)?.key ?? "cours",
+  )
   const [files, setFiles] = useState<{ title: string; files: { name: string }[] } | null>(null)
 
-  const shown = items.filter((i) => i.kind === kind)
+  const kinds = familyOf(family).kinds
+  const shown = items.filter((i) => kinds.includes(i.kind))
+  /** The other button, when it is the one actually holding this chapitre's content. */
+  const other = FAMILIES.find((f) => f.key !== family && familyCount(f, byKind) > 0)
 
   const head = (
     <>
-      <Disc n={n} open={open} />
+      <Disc n={n} open={open} muted={empty} />
       <div className="min-w-0 flex-1 text-start">
         <p
           className={cn(
-            "truncate font-bold text-v2-ink",
+            "truncate font-bold",
+            empty ? "text-v2-ink/55" : "text-v2-ink",
             "text-[calc(13px*var(--ts))] md:text-[calc(16px*var(--ts))] 2xl:text-[calc(20.5px*var(--ts))]",
           )}
           dir="auto"
         >
           {chapter.name}
         </p>
-        <p className="truncate text-[calc(9px*var(--ts))] text-v2-ink/60 md:text-[calc(10.5px*var(--ts))] 2xl:text-[calc(11.7px*var(--ts))]">
+        <p
+          className={cn(
+            "truncate text-[calc(9px*var(--ts))] md:text-[calc(10.5px*var(--ts))] 2xl:text-[calc(11.7px*var(--ts))]",
+            empty ? "text-v2-ink/40" : "text-v2-ink/60",
+          )}
+        >
           {chapterMeta(bundle)}
         </p>
       </div>
@@ -188,65 +183,103 @@ function ChapterCard({
   if (empty) {
     // Not a button: there is nothing to open. The corner says why.
     return (
-      <div className="relative flex min-h-[5rem] items-center gap-3 overflow-hidden rounded-2xl border border-v2-ink/50 bg-v2-surface py-4 ps-4 pe-[5.25rem] md:pe-[7rem] 2xl:pe-[130px] md:min-h-[108px] md:gap-5 md:ps-6 2xl:min-h-[136px] 2xl:gap-5 2xl:ps-6">
-        <Ribbon>قريباً</Ribbon>
+      <div className="relative flex min-h-[5rem] items-center gap-3 overflow-hidden rounded-2xl border border-v2-ink/10 bg-v2-surface/55 py-4 ps-4 pe-[5.25rem] md:pe-[7rem] 2xl:pe-[130px] md:min-h-[108px] md:gap-5 md:ps-6 2xl:min-h-[136px] 2xl:gap-5 2xl:ps-6">
+        <Ribbon tone="soon">قريباً</Ribbon>
         <div className="flex w-full items-center gap-3 md:gap-5">{head}</div>
       </div>
     )
   }
 
-  if (!open) {
-    return (
-      <button
-        type="button"
-        data-uisfx="expand"
-        onClick={onToggle}
-        aria-expanded={false}
-        className="group relative flex min-h-[5rem] w-full items-center gap-3 rounded-2xl border border-v2-ink/50 bg-v2-surface px-4 py-4 text-start transition hover:border-v2-ink/70 hover:shadow-md md:min-h-[108px] md:gap-5 md:px-6 2xl:min-h-[136px] 2xl:px-6"
-      >
-        {head}
-        <ChevronRight className="size-5 shrink-0 rotate-90 text-v2-ink/40 transition group-hover:text-v2-ink md:size-6" strokeWidth={2} />
-      </button>
-    )
-  }
-
+  /**
+   * UN SEUL élément, ouvert ou fermé.
+   *
+   * Avant, la carte fermée (un bouton blanc) et le chapitre ouvert (un panneau
+   * profond) étaient deux arbres différents : ouvrir démontait l'un et montait
+   * l'autre, et la liste sautait d'une hauteur à l'autre d'une image sur
+   * l'autre. C'est la même section maintenant ; seules ses classes changent, et
+   * elles se transitionnent — le fond passe du blanc au dégradé, le texte suit.
+   *
+   * Le corps est enfermé dans une grille dont la rangée va de `0fr` à `1fr` :
+   * c'est la seule façon d'animer vers une hauteur AUTOMATIQUE sans la mesurer
+   * en JavaScript ni plafonner un `max-height` au jugé. `overflow-hidden` fait
+   * le reste, et `motion-safe:` laisse la bascule instantanée à qui a demandé
+   * moins d'animation.
+   */
   return (
-    <section className="rounded-2xl bg-v2-chapter p-3 md:p-5 2xl:p-6">
+    <section
+      className={cn(
+        "rounded-2xl motion-safe:transition-[background-color,padding,box-shadow] motion-safe:duration-300 motion-safe:ease-out",
+        open
+          ? "bg-v2-chapter p-3 shadow-v2-panel md:p-5 2xl:p-6"
+          : "border border-v2-ink/10 bg-v2-surface p-0 shadow-v2-card hover:border-v2-brand/30 hover:shadow-v2-lift",
+      )}
+    >
       <button
         type="button"
-        data-uisfx="collapse"
+        data-uisfx={open ? "collapse" : "expand"}
         onClick={onToggle}
-        aria-expanded
-        className="flex w-full items-center gap-3 rounded-2xl px-1 text-start md:gap-5 2xl:gap-5"
+        aria-expanded={open}
+        className={cn(
+          "group flex w-full items-center gap-3 rounded-2xl text-start md:gap-5",
+          open
+            ? "px-1"
+            : "min-h-[5rem] px-4 py-4 motion-safe:transition-transform md:min-h-[108px] md:px-6 2xl:min-h-[136px] 2xl:px-6",
+        )}
       >
-        <Disc n={n} open />
+        <Disc n={n} open={open} />
         <div className="min-w-0 flex-1 text-start">
           <p
-            className="truncate font-bold text-v2-ink text-[calc(14px*var(--ts))] md:text-[calc(17px*var(--ts))] 2xl:text-[calc(21px*var(--ts))]"
+            className={cn(
+              "truncate font-bold motion-safe:transition-colors",
+              open
+                ? "text-v2-on-chapter text-[calc(14px*var(--ts))] md:text-[calc(17px*var(--ts))] 2xl:text-[calc(21px*var(--ts))]"
+                : "text-v2-ink text-[calc(13px*var(--ts))] md:text-[calc(16px*var(--ts))] 2xl:text-[calc(20.5px*var(--ts))]",
+            )}
             dir="auto"
           >
             {chapter.name}
           </p>
-          <p className="truncate text-[calc(9px*var(--ts))] text-v2-ink/70 md:text-[calc(10.5px*var(--ts))] 2xl:text-[calc(11.7px*var(--ts))]">
+          <p
+            className={cn(
+              "truncate text-[calc(9px*var(--ts))] motion-safe:transition-colors md:text-[calc(10.5px*var(--ts))] 2xl:text-[calc(11.7px*var(--ts))]",
+              open ? "text-v2-on-chapter/70" : "text-v2-ink/60",
+            )}
+          >
             {chapterMeta(bundle)}
           </p>
         </div>
-        <ChevronRight className="size-5 shrink-0 -rotate-90 text-v2-ink/50 md:size-6" strokeWidth={2} />
+        <ChevronRight
+          className={cn(
+            "size-5 shrink-0 md:size-6 motion-safe:transition-transform motion-safe:duration-300",
+            open ? "-rotate-90 text-v2-on-chapter/70" : "rotate-90 text-v2-ink/35 group-hover:text-v2-brand",
+          )}
+          strokeWidth={2}
+        />
       </button>
 
+      <div
+        className={cn(
+          "grid motion-safe:transition-[grid-template-rows,opacity] motion-safe:duration-300 motion-safe:ease-out",
+          open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
+        )}
+      >
+        {/* Fermé, le corps reste dans le DOM pour pouvoir s'animer — mais il
+            n'existe plus pour personne : `inert` le retire du clavier, du
+            pointeur et des lecteurs d'écran d'un coup. */}
+        <div className="overflow-hidden" inert={!open}>
       <div
         role="tablist"
         aria-label="نوع المحتوى"
         className="-mx-3 mt-4 flex justify-start gap-2 overflow-x-auto px-3 pb-1 md:mx-0 md:mt-5 md:px-0 2xl:mt-6 2xl:gap-[21px]"
       >
-        {KINDS.map((k) => (
+        {FAMILIES.map((f) => (
           <Chip
-            key={k.key}
-            tone="brand"
-            active={kind === k.key}
-            icon={k.icon}
-            label={k.label}
-            onClick={() => setKind(k.key)}
+            key={f.key}
+            tone="deep"
+            active={family === f.key}
+            icon={f.icon}
+            label={f.label}
+            onClick={() => setFamily(f.key)}
             className="h-10 md:h-11 2xl:h-[46px]"
           />
         ))}
@@ -255,19 +288,25 @@ function ChapterCard({
       <ul className="mt-3 flex flex-col gap-3 md:mt-4 2xl:mt-5 2xl:gap-6">
         {shown.length === 0 ? (
           <li>
-            <div className="rounded-2xl border border-white/50 bg-v2-surface/70 px-5 py-6 text-center">
-              <p className="text-[calc(10px*var(--ts))] font-semibold text-v2-ink md:text-[calc(12px*var(--ts))]">
-                ما فمّاش {kindOf(kind).label} في الفصل هذا
+            <div className="rounded-2xl border border-dashed border-v2-chapter-line bg-white/[0.07] px-5 py-8 text-center">
+              <p className="text-[calc(10px*var(--ts))] font-semibold text-v2-on-chapter md:text-[calc(12px*var(--ts))]">
+                ما فمّاش {familyOf(family).label} في الفصل هذا
               </p>
-              <p className="mt-1 text-[calc(9px*var(--ts))] text-v2-ink/60 md:text-[calc(10px*var(--ts))]">
-                جرّب نوع آخر من فوق — {KINDS.filter((k) => byKind[k.key] > 0).map((k) => k.label).join("، ") || "مازال ما فمّاش محتوى"}.
+              <p className="mt-1 text-[calc(9px*var(--ts))] text-v2-on-chapter/65 md:text-[calc(10px*var(--ts))]">
+                {/* With two buttons the advice is exact: a chapitre that opens
+                    has content, so if this side is empty the other one holds it. */}
+                {other ? `الفصل هذا فيه ${other.label} برك — إضغط عليهم من فوق.` : "مازال ما فمّاش محتوى في الفصل هذا."}
               </p>
             </div>
           </li>
         ) : (
-          shown.map((item) => (
+          shown.map((item, i) => (
             <li key={item.id}>
-              <ItemCard item={item} onFiles={() => setFiles({ title: item.title, files: item.files })} />
+              <ItemCard
+                item={item}
+                n={i + 1}
+                onFiles={() => setFiles({ title: item.title, files: item.files })}
+              />
             </li>
           ))
         )}
@@ -279,16 +318,55 @@ function ChapterCard({
         files={files?.files ?? null}
         onOpenChange={(o) => !o && setFiles(null)}
       />
+        </div>
+      </div>
     </section>
   )
 }
 
-function ItemCard({ item, onFiles }: { item: ChapterItem; onFiles: () => void }) {
+/**
+ * Un contenu. LA CARTE ENTIÈRE emmène au lecteur.
+ *
+ * Le lien était le mot « فيديو », haut de quinze pixels, au milieu d'une carte
+ * de cent vingt : tout le reste — le titre, le ruban, l'espace autour —
+ * ressemblait à un bouton et ne répondait pas. Le lien couvre maintenant la
+ * carte (`absolute inset-0`), et la rangée d'actions repasse au-dessus de lui
+ * pour que « وثائق » reste cliquable à côté ; un bouton dans un lien serait du
+ * HTML invalide, cette superposition est la façon correcte de donner deux
+ * gestes à une même carte.
+ *
+ * Sans vidéo (une série, un résumé), c'est la fiche des documents qui s'ouvre :
+ * une carte se clique toujours, elle ne promet jamais rien qui n'arrive pas.
+ */
+function ItemCard({ item, n, onFiles }: { item: ChapterItem; n: number; onFiles: () => void }) {
   const meta = kindOf(item.kind)
+  const wholeCardOpensFiles = !item.videoPath && item.files.length > 0
   return (
-    <article className="relative flex min-h-[6rem] items-center gap-3 overflow-hidden rounded-2xl border border-v2-ink/50 bg-v2-surface py-4 ps-4 pe-[5.25rem] md:pe-[7rem] 2xl:pe-[130px] transition hover:shadow-md md:min-h-[120px] md:ps-6 2xl:min-h-[152px] 2xl:ps-7">
-      <Ribbon>{meta.ribbon}</Ribbon>
-      <div className="min-w-0 flex-1">
+    <article className="group relative flex min-h-[6rem] items-center gap-3 overflow-hidden rounded-2xl border border-v2-ink/10 bg-v2-surface py-4 ps-4 pe-[5.25rem] md:pe-[7rem] 2xl:pe-[130px] shadow-v2-card transition hover:-translate-y-0.5 hover:border-v2-brand/30 hover:shadow-v2-lift md:min-h-[120px] md:ps-6 2xl:min-h-[152px] 2xl:ps-7">
+      <Ribbon tone={item.kind}>{meta.ribbon}</Ribbon>
+
+      {/* La surface cliquable, sous le contenu : elle prend tout ce que la
+          rangée d'actions ne réclame pas. */}
+      {item.videoPath ? (
+        <Link
+          to={item.videoPath}
+          data-uisfx="play"
+          aria-label={`${item.title} — فيديو`}
+          className="absolute inset-0 z-0 rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-v2-brand"
+        />
+      ) : wholeCardOpensFiles ? (
+        <button
+          type="button"
+          data-uisfx="open"
+          onClick={onFiles}
+          aria-label={`${item.title} — وثائق`}
+          className="absolute inset-0 z-0 rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-v2-brand"
+        />
+      ) : null}
+
+      <div className="pointer-events-none relative z-10 flex min-w-0 flex-1 items-center gap-3 md:gap-5">
+        <ItemDisc n={n} />
+        <div className="min-w-0 flex-1">
         <h3
           className="truncate font-bold text-v2-ink text-[calc(12px*var(--ts))] md:text-[calc(15px*var(--ts))] 2xl:text-[calc(19.3px*var(--ts))]"
           dir="auto"
@@ -297,16 +375,12 @@ function ItemCard({ item, onFiles }: { item: ChapterItem; onFiles: () => void })
         </h3>
         <div className="mt-2 flex items-center justify-start gap-4 md:mt-3 md:gap-6 2xl:gap-8">
           {item.videoPath ? (
-            <Link
-              to={item.videoPath}
-              data-uisfx="play"
-              className="inline-flex items-center gap-2 text-v2-ink/60 transition hover:text-v2-brand"
-            >
+            <span className="inline-flex items-center gap-2 text-v2-ink/60 transition group-hover:text-v2-brand">
               <PlayCircle className="size-5 shrink-0 text-v2-brand md:size-6 2xl:size-7" strokeWidth={1.75} />
               <span className="text-[calc(10px*var(--ts))] font-medium md:text-[calc(13px*var(--ts))] 2xl:text-[calc(16px*var(--ts))]">
                 فيديو
               </span>
-            </Link>
+            </span>
           ) : item.kind === "quiz" ? (
             <span className="inline-flex items-center gap-2 text-v2-ink/60">
               <Timer className="size-5 shrink-0 text-v2-brand md:size-6 2xl:size-7" strokeWidth={1.75} />
@@ -321,7 +395,7 @@ function ItemCard({ item, onFiles }: { item: ChapterItem; onFiles: () => void })
               type="button"
               data-uisfx="open"
               onClick={onFiles}
-              className="inline-flex items-center gap-2 text-v2-ink/60 transition hover:text-v2-brand"
+              className="pointer-events-auto relative z-20 inline-flex items-center gap-2 text-v2-ink/60 transition hover:text-v2-brand"
             >
               <FileText className="size-5 shrink-0 text-v2-brand md:size-6 2xl:size-7" strokeWidth={1.75} />
               <span className="text-[calc(10px*var(--ts))] font-medium md:text-[calc(13px*var(--ts))] 2xl:text-[calc(16px*var(--ts))]">
@@ -330,184 +404,8 @@ function ItemCard({ item, onFiles }: { item: ChapterItem; onFiles: () => void })
             </button>
           )}
         </div>
+        </div>
       </div>
     </article>
-  )
-}
-
-/* ------------------------------------------------------------------ *
- * خطوة بخطوة · إمتحانات — the same card, different cargo
- * ------------------------------------------------------------------ */
-
-function PathList({ paths }: { paths: Path[] }) {
-  const lessons = useData((s) => s.lessons)
-  const quizzes = useData((s) => s.quizzes)
-  const [open, setOpen] = useState<string | null>(paths[0]?.id ?? null)
-
-  if (paths.length === 0) {
-    return (
-      <PanelEmpty
-        icon={Route}
-        title="ما فمّاش مسار مازال"
-        body="المسار يعطيك الطريق: درس، تمارين، وبعد كويز. كي نحضّروه للمادة هاذي، يظهرلك هوني."
-      />
-    )
-  }
-
-  return (
-    <ul className="flex flex-col gap-4 2xl:gap-8">
-      {paths.map((p, i) => {
-        const shown = open === p.id
-        return (
-          <li key={p.id} className="rise" style={{ ["--i" as string]: Math.min(i, 12) }}>
-            <section className={cn("rounded-2xl", shown ? "bg-v2-chapter p-3 md:p-5 2xl:p-6" : "")}>
-              <button
-                type="button"
-                data-uisfx={shown ? "collapse" : "expand"}
-                onClick={() => setOpen((cur) => (cur === p.id ? null : p.id))}
-                aria-expanded={shown}
-                className={cn(
-                  "relative flex w-full items-center gap-3 rounded-2xl px-4 py-4 text-start transition md:gap-5 md:px-6",
-                  shown ? "px-1 md:px-1" : "min-h-[5rem] border border-v2-ink/50 bg-v2-surface hover:border-v2-ink/70 hover:shadow-md md:min-h-[108px] 2xl:min-h-[136px]",
-                )}
-              >
-                <Disc n={i + 1} open={shown} />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate font-bold text-v2-ink text-[calc(13px*var(--ts))] md:text-[calc(16px*var(--ts))] 2xl:text-[calc(20.5px*var(--ts))]" dir="auto">
-                    {p.title}
-                  </p>
-                  <p className="line-clamp-1 text-[calc(9px*var(--ts))] text-v2-ink/60 md:text-[calc(10.5px*var(--ts))] 2xl:text-[calc(11.7px*var(--ts))]">
-                    {p.items.length} مرحلة · {p.description ?? ""}
-                  </p>
-                </div>
-                <ChevronRight
-                  className={cn("size-5 shrink-0 text-v2-ink/40 transition md:size-6", shown ? "-rotate-90" : "rotate-90")}
-                  strokeWidth={2}
-                />
-              </button>
-
-              {shown && (
-                <ol className="mt-3 flex flex-col gap-3 md:mt-4 2xl:mt-5 2xl:gap-6">
-                  {p.items.map((step, k) => {
-                    const lesson = step.refType === "lesson" ? lessons.find((l) => l.id === step.refId) : undefined
-                    const quiz = step.refType === "quiz" ? quizzes.find((q) => q.id === step.refId) : undefined
-                    const title = lesson?.title ?? quiz?.title ?? "محتوى"
-                    const to = lesson?.videoUrl ? inV2(lessonVideoPath(lesson.id, p.subjectId)) : undefined
-                    const rowClass = cn(
-                      "relative flex min-h-[4.5rem] items-center gap-3 overflow-hidden rounded-2xl border border-v2-ink/50 bg-v2-surface py-4 ps-4 pe-[5.25rem] md:pe-[7rem] 2xl:pe-[130px] md:min-h-[96px] md:ps-6",
-                      to && "transition hover:shadow-md",
-                    )
-                    const inner = (
-                      <>
-                        <Ribbon>{quiz ? "QUIZ" : "ÉTAPE"}</Ribbon>
-                          <span className="grid size-8 shrink-0 place-items-center rounded-full bg-v2-grad-25 text-[calc(9px*var(--ts))] font-bold text-v2-ink md:size-10 md:text-[calc(10px*var(--ts))]">
-                            {k + 1}
-                          </span>
-                          <span className="min-w-0 flex-1">
-                            <span className="block truncate font-bold text-v2-ink text-[calc(12px*var(--ts))] md:text-[calc(14px*var(--ts))] 2xl:text-[calc(17px*var(--ts))]" dir="auto">
-                              {title}
-                            </span>
-                            <span className="mt-1 flex items-center gap-2 text-v2-ink/60">
-                              {to ? (
-                                <PlayCircle className="size-5 shrink-0 text-v2-brand" strokeWidth={1.75} />
-                              ) : (
-                                <Timer className="size-5 shrink-0 text-v2-brand" strokeWidth={1.75} />
-                              )}
-                              <span className="text-[calc(9.5px*var(--ts))] font-medium md:text-[calc(11px*var(--ts))]">
-                                {quiz ? `${quiz.questions?.length ?? 0} أسئلة · ${quiz.durationMin} دق` : to ? "فيديو" : "وثائق برك"}
-                              </span>
-                            </span>
-                          </span>
-                      </>
-                    )
-                    return (
-                      <li key={step.id}>
-                        {to ? (
-                          <Link to={to} data-uisfx="play" className={rowClass}>
-                            {inner}
-                          </Link>
-                        ) : (
-                          <div className={rowClass}>{inner}</div>
-                        )}
-                      </li>
-                    )
-                  })}
-                </ol>
-              )}
-            </section>
-          </li>
-        )
-      })}
-    </ul>
-  )
-}
-
-function ExamList({
-  subjectId,
-  exams,
-}: {
-  subjectId: string
-  exams: { id: string; title: string; videoUrl?: string; pdfs?: { name: string }[] }[]
-}) {
-  const [files, setFiles] = useState<{ title: string; files: { name: string }[] } | null>(null)
-
-  if (exams.length === 0) {
-    return (
-      <PanelEmpty
-        icon={FileCheck2}
-        title="ما فمّاش إمتحانات مازال"
-        body="الفروض والإمتحانات مع الإصلاح يتزادوا طول السنة. كي يوصلوا، تلقاهم هوني."
-      />
-    )
-  }
-
-  return (
-    <>
-      <ul className="flex flex-col gap-4 2xl:gap-6">
-        {exams.map((e, i) => (
-          <li key={e.id} className="rise" style={{ ["--i" as string]: Math.min(i, 12) }}>
-            <article className="relative flex min-h-[5rem] items-center gap-3 overflow-hidden rounded-2xl border border-v2-ink/50 bg-v2-surface py-4 ps-4 pe-[5.25rem] md:pe-[7rem] 2xl:pe-[130px] md:min-h-[108px] md:gap-5 md:ps-6 2xl:min-h-[136px]">
-              <Ribbon>EXAMEN</Ribbon>
-              <Disc n={i + 1} />
-              <div className="min-w-0 flex-1">
-                <p className="truncate font-bold text-v2-ink text-[calc(13px*var(--ts))] md:text-[calc(16px*var(--ts))] 2xl:text-[calc(20.5px*var(--ts))]" dir="auto">
-                  {e.title}
-                </p>
-                <div className="mt-2 flex items-center justify-start gap-4 md:gap-6">
-                  {examPath(e as never, subjectId) && (
-                    <Link
-                      to={examPath(e as never, subjectId)!}
-                      data-uisfx="play"
-                      className="inline-flex items-center gap-2 text-v2-ink/60 transition hover:text-v2-brand"
-                    >
-                      <PlayCircle className="size-5 shrink-0 text-v2-brand md:size-6" strokeWidth={1.75} />
-                      <span className="text-[calc(10px*var(--ts))] font-medium md:text-[calc(12px*var(--ts))]">الإصلاح بالفيديو</span>
-                    </Link>
-                  )}
-                  {!!e.pdfs?.length && (
-                    <button
-                      type="button"
-                      data-uisfx="open"
-                      onClick={() => setFiles({ title: e.title, files: e.pdfs ?? [] })}
-                      className="inline-flex items-center gap-2 text-v2-ink/60 transition hover:text-v2-brand"
-                    >
-                      <FileText className="size-5 shrink-0 text-v2-brand md:size-6" strokeWidth={1.75} />
-                      <span className="text-[calc(10px*var(--ts))] font-medium md:text-[calc(12px*var(--ts))]">
-                        {e.pdfs.length} وثائق
-                      </span>
-                    </button>
-                  )}
-                </div>
-              </div>
-            </article>
-          </li>
-        ))}
-      </ul>
-      <FilesSheet
-        title={files?.title ?? ""}
-        files={files?.files ?? null}
-        onOpenChange={(o) => !o && setFiles(null)}
-      />
-    </>
   )
 }

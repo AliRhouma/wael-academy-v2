@@ -19,6 +19,9 @@ import { PlaylistPanel, type PlaylistMode, type PlaylistRow } from "./PlaylistPa
 
 const ORDINAL = ["الأوّل", "الثاني", "الثالث"]
 
+/** Les genres de contenu qui sont de l'entraînement, pas du cours. */
+const PRACTICE = new Set(["exercice", "serie"])
+
 /** « هبطت 20 أوت 2026 » — when the replay went online (else the séance's day). */
 function publishedLabel(iso: string): string {
   const d = parseDay(iso.slice(0, 10))
@@ -65,6 +68,8 @@ export default function V2VideoScreen() {
   const demo = useDemoStates()
   const wide = useMediaQuery("(min-width: 1024px)")
   const sessions = useData((s) => s.sessions)
+  const lessons = useData((s) => s.lessons)
+  const exams = useData((s) => s.exams)
   const { subjectById, teacherName } = useLookups()
 
   const valid = rawKind === "lesson" || rawKind === "exam" || rawKind === "seance"
@@ -77,8 +82,35 @@ export default function V2VideoScreen() {
   const player = useYouTubePlayer(videoId)
 
   const session = kind === "seance" ? (sessions.find((s) => s.id === id) ?? null) : null
-  const docs = useSessionDocs(session, true)
+  const sessionDocs = useSessionDocs(session, true)
   const { has, download } = useDownloads()
+
+  /**
+   * Les documents de CE replay.
+   *
+   * Une séance apporte les siens (le cours de la séance, les exercices que le
+   * prof a envoyés). Un contenu de matière — un cours, un exercice — porte ses
+   * propres PDF, et ce sont eux qu'il faut ici : arriver sur le lecteur d'une
+   * leçon et lire « ما فمّا حتّى وثيقة » alors que la carte d'où l'on vient
+   * annonçait une vidéo ET une vothèque, c'était la page qui perdait la moitié
+   * de la leçon en chemin. Même panneau, même bouton de téléchargement ; seule
+   * la provenance change.
+   */
+  const docs = useMemo<{ id: string; name: string; label: string }[]>(() => {
+    if (kind === "seance")
+      return sessionDocs.map((d) => ({
+        id: d.id,
+        name: d.pdf.name,
+        label: d.kind === "cours" ? "كور الحصّة" : "تمرين",
+      }))
+    if (kind === "lesson") {
+      const lesson = lessons.find((l) => l.id === id)
+      const label = lesson && PRACTICE.has(lesson.kind) ? "تمرين" : "كور الدرس"
+      return (lesson?.pdfs ?? []).map((pdf, i) => ({ id: `${lesson!.id}#${i}`, name: pdf.name, label }))
+    }
+    const exam = exams.find((e) => e.id === id)
+    return (exam?.pdfs ?? []).map((pdf, i) => ({ id: `${exam!.id}#${i}`, name: pdf.name, label: "إمتحان" }))
+  }, [kind, id, sessionDocs, lessons, exams])
 
   const rows = useMemo<PlaylistRow[]>(() => {
     if (!source) return []
@@ -248,12 +280,12 @@ export default function V2VideoScreen() {
                           <FolderOpen className="size-7 stroke-v2-grad" strokeWidth={1.6} />
                         </span>
                         <p dir="auto" className="line-clamp-2 text-[calc(9px*var(--ts))] font-medium leading-snug text-v2-ink">
-                          {doc.pdf.name}
+                          {doc.name}
                         </p>
-                        <p className="text-[calc(7.5px*var(--ts))] text-v2-ink/55">{doc.kind === "cours" ? "كور الحصّة" : "تمرين"}</p>
+                        <p className="text-[calc(7.5px*var(--ts))] text-v2-ink/55">{doc.label}</p>
                         <button
                           type="button"
-                          onClick={() => download(doc.id, doc.pdf.name)}
+                          onClick={() => download(doc.id, doc.name)}
                           className={cn(ctaClass, "mt-1 min-h-10 px-4", taken && "border border-v2-ink/20 bg-transparent hover:shadow-none")}
                         >
                           {taken ? (

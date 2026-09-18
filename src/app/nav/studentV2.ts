@@ -18,5 +18,5 @@ export const studentV2Nav: V2NavItem[] = [
   { label: "الرزنامة", path: "/student-v2/calendrier", icon: CalendarDays },
   { label: "تسجيلات", path: "/student-v2/seances", icon: TvMinimalPlay },
   { label: "مجموعاتي", path: "/student-v2/groupes", icon: Users },
-  { label: "موادك", path: "/student-v2/matieres", icon: LibraryBig },
+  { label: "الدروس", path: "/student-v2/matieres", icon: LibraryBig },
 ]
